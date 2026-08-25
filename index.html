@@ -800,6 +800,141 @@ body[data-nested="1"] #foot{display:none}
 .bnat span{font-size:11px;padding:5px 10px;border-radius:999px;color:var(--champagne);
   background:var(--glass-1);border:1px solid var(--accent-line,var(--edge))}
 
+/* ══════════════ الترويسة ══════════════ */
+.bar{border-bottom:0}
+/* خيط زخرفي يتلاشى من الطرفين: يفصل الترويسة بلا خط جافّ */
+.bar::after{content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--edge) 12%,
+    var(--edge-lit) 50%,var(--edge) 88%,transparent)}
+.bar-in{gap:11px;padding-block:12px;position:relative}
+
+/* العلامة: صدى أيقونة التطبيق نفسها */
+.emblem{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;
+  place-items:center;overflow:hidden;
+  background:linear-gradient(155deg,#0E6B4F,#082E40);
+  box-shadow:0 2px 10px rgba(8,46,64,.28), inset 0 0 0 1px rgba(255,255,255,.09)}
+.emblem svg{width:30px;height:30px;fill:none}
+.e-ring{stroke:#4FE3D8;stroke-width:1.1;opacity:.55}
+.e-sq{stroke:#F0C070;stroke-width:1.3}
+.e-star{fill:#FFE0A8}
+body[data-nested="1"] .emblem{display:none}   /* مكانها لزر الرجوع */
+
+/* العنوان: التدرّج مشتقّ من اللوحة، فلا يختفي على الفاتح ولا الداكن */
+.brand h1{font-family:"Readex Pro",sans-serif;font-weight:600;
+  font-size:17.5px;line-height:1.25;letter-spacing:-.015em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background-image:linear-gradient(105deg,var(--text) 0%,var(--text) 38%,
+    var(--champagne) 92%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+/* الاتجاه المنطقي: العنوان يبدأ بلون النصّ وينتهي بلمعة اللهجة،
+   والتدرّج بالدرجات مطلق فينقلب في العربية إن لم يُعكس. */
+html[dir=rtl] .brand h1{
+  background-image:linear-gradient(255deg,var(--text) 0%,var(--text) 38%,
+    var(--champagne) 92%)}
+@supports not (background-clip:text){ .brand h1{color:var(--text)} }
+
+/* السطر الثاني: معيّن صغير ثم النصّ، بتباعد حروف يمنحه رزانة */
+.brand p{display:flex;align-items:center;gap:7px;margin-top:3px;
+  font-size:11px;letter-spacing:.04em;color:var(--text-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p::before{content:"";flex:0 0 auto;width:5px;height:5px;
+  border-radius:1px;transform:rotate(45deg);background:var(--champagne-dim)}
+
+@media (min-width:560px){
+  .brand h1{font-size:20.5px}
+  .brand p{font-size:12px;margin-top:4px}
+  .emblem{width:42px;height:42px;border-radius:13px}
+  .emblem svg{width:33px;height:33px}
+}
+@media (min-width:900px){
+  .bar-in{padding-block:15px}
+  .brand h1{font-size:22px}
+}
+
+/* ══════════════ الإعدادات ══════════════ */
+.set-wrap{max-width:600px;margin:0 auto;padding-bottom:8px}
+.set-sec{margin-top:14px}
+.set-sec:first-child{margin-top:4px}
+.set-h{display:flex;align-items:baseline;gap:9px;margin:0 2px 9px}
+.set-h b{font-size:13px;font-weight:600;color:var(--text)}
+.set-h span{flex:1;font-size:11px;color:var(--text-3);line-height:1.5}
+
+/* ── معاينة اللوحة: شاشة مصغّرة لا شريط لون ── */
+.thm{display:flex;flex-direction:column;gap:8px}
+.thm-row{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;
+  font-family:inherit;padding:9px 11px;border-radius:16px;text-align:start;
+  background:var(--glass-1);border:1px solid var(--edge);color:var(--text-2);
+  transition:border-color .18s ease,transform .12s ease}
+.thm-row:hover{border-color:var(--edge-lit)}
+.thm-row:active{transform:scale(.99)}
+.thm-row.on{border-color:var(--edge-lit);color:var(--text)}
+.thm-pv{flex:0 0 auto;width:64px;height:44px;border-radius:11px;overflow:hidden;
+  position:relative;box-shadow:inset 0 0 0 1px rgba(128,128,128,.22)}
+.thm-pv i{position:absolute;display:block;border-radius:2px}
+.thm-pv .p-bar{inset-inline:0;top:0;height:11px}
+.thm-pv .p-dot{width:7px;height:7px;border-radius:50%;top:2px;inset-inline-start:4px}
+.thm-pv .p-l1{height:4px;inset-inline:6px;top:17px}
+.thm-pv .p-l2{height:4px;inset-inline-start:6px;width:26px;top:25px}
+.thm-pv .p-chip{height:9px;width:18px;inset-inline-start:6px;top:33px;border-radius:4px}
+.thm-nm{flex:1;min-width:0}
+.thm-nm b{display:block;font-size:13.5px;font-weight:600;line-height:1.35}
+.thm-nm span{display:block;font-size:10.5px;color:var(--text-3);margin-top:1px;
+  direction:ltr;unicode-bidi:isolate;text-align:start}
+.thm-ck{flex:0 0 auto;width:19px;height:19px;border-radius:50%;
+  border:1.6px solid var(--edge);display:grid;place-items:center}
+.thm-row.on .thm-ck{border-color:var(--champagne);background:var(--champagne)}
+.thm-row.on .thm-ck::after{content:"";width:8px;height:4px;margin-top:-2px;
+  border:2px solid var(--bg);border-top:0;border-right:0;transform:rotate(-45deg)}
+
+/* ── اللغة ── */
+.lang2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.lang2 button{font-family:inherit;cursor:pointer;padding:14px 10px;border-radius:16px;
+  background:var(--glass-1);border:1px solid var(--edge);color:var(--text-2);
+  transition:border-color .18s ease}
+.lang2 button b{display:block;font-size:16px;font-weight:600;line-height:1.3;color:var(--text)}
+.lang2 button span{display:block;font-size:10.5px;color:var(--text-3);margin-top:3px}
+.lang2 button.on{border-color:var(--edge-lit);background:var(--glass-1)}
+.lang2 button.on b{color:var(--champagne)}
+
+/* ── إحصاء الدليل ── */
+.set-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.set-stats div{padding:12px 4px;text-align:center;border-radius:14px;
+  background:var(--glass-1);border:1px solid var(--edge)}
+.set-stats b{display:block;font-size:17px;font-weight:600;color:var(--champagne);
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.set-stats span{display:block;font-size:9.5px;color:var(--text-3);margin-top:3px}
+
+/* ── صف قابل للضغط ── */
+.set-row{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;
+  font-family:inherit;text-align:start;padding:13px 12px;border-radius:16px;
+  background:var(--glass-1);border:1px solid var(--edge);color:var(--text);
+  transition:border-color .18s ease}
+.set-row+.set-row{margin-top:8px}
+.set-row:hover{border-color:var(--edge-lit)}
+.set-row .ic{flex:0 0 auto;width:34px;height:34px;border-radius:11px;display:grid;
+  place-items:center;background:var(--glass-2);border:1px solid var(--edge)}
+.set-row .ic svg{width:17px;height:17px;fill:none;stroke:var(--champagne);
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.set-row .tx{flex:1;min-width:0}
+.set-row .tx b{display:block;font-size:13.5px;font-weight:600;line-height:1.35}
+.set-row .tx span{display:block;font-size:11px;color:var(--text-3);margin-top:2px;
+  line-height:1.55}
+.set-row .go{flex:0 0 auto;font-size:12px;color:var(--champagne);
+  font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.set-row.done .ic{background:var(--accent-soft,var(--glass-1));border-color:var(--edge-lit)}
+
+/* ── رسالة الوقف ── */
+.waqf-set{margin-top:14px;padding:20px 17px;border-radius:20px;text-align:center;
+  background:linear-gradient(160deg,var(--a1),var(--a2));border:1px solid var(--edge-lit)}
+.waqf-set .orn{display:block;width:30px;height:30px;margin:0 auto 12px}
+.waqf-set .orn svg{width:30px;height:30px;fill:var(--champagne);opacity:.9}
+.waqf-set p{font-size:13.5px;line-height:1.95;color:var(--text)}
+.waqf-set p+p{font-size:12px;color:var(--text-2);margin-top:9px}
+.set-note{font-size:11px;color:var(--text-3);line-height:1.8;text-align:center;
+  margin-top:13px;padding:0 6px}
+.set-note code{font-size:10.5px;color:var(--champagne);direction:ltr;
+  unicode-bidi:isolate;display:inline-block}
+
 /* النص الأوليّ: يراه الزائر أثناء التحميل ويقرؤه الزاحف، ثم يستبدله التطبيق */
 #seed{padding:6px 2px 30px;max-width:620px;margin:0 auto}
 #seed h2{font-size:19px;font-weight:600;line-height:1.45}
@@ -895,7 +1030,7 @@ html[data-theme="ink"]{
   <div class="wrap bar-in">
     <button class="back" id="back" type="button" aria-label="back">
       <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div class="brand"><h1 id="ttl"></h1><p id="tag"></p></div>
+    <span class="emblem" id="emblem" aria-hidden="true"><svg viewBox="0 0 40 40"><circle class="e-ring" cx="20" cy="20" r="17.4"/><rect class="e-sq" x="8.2" y="8.2" width="23.6" height="23.6" rx="1.2"/><rect class="e-sq" x="8.2" y="8.2" width="23.6" height="23.6" rx="1.2" transform="rotate(45 20 20)"/><path class="e-star" d="M20.0 9.4 L21.65 16.03 L27.5 12.5 L23.97 18.35 L30.6 20.0 L23.97 21.65 L27.5 27.5 L21.65 23.97 L20.0 30.6 L18.35 23.97 L12.5 27.5 L16.03 21.65 L9.4 20.0 L16.03 18.35 L12.5 12.5 L18.35 16.03 Z"/></svg></span><div class="brand"><h1 id="ttl"></h1><p id="tag"></p></div>
     <a class="gear" id="gear" href="#/settings" aria-label="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.6l1.2 2.2 2.5-.3.6 2.4 2.3 1-.9 2.3.9 2.3-2.3 1-.6 2.4-2.5-.3L12 21.4 10.8 19.2l-2.5.3-.6-2.4-2.3-1 .9-2.3-.9-2.3 2.3-1 .6-2.4 2.5.3z"/></svg></a>
     <div class="toggle" role="group" aria-label="Language">
       <button type="button" data-ui="ar" aria-pressed="true">AR</button>
@@ -1042,7 +1177,7 @@ const T = {
  ar:{title:"دليل الدعاة والمترجمين",tag:"تواصل مع داعية بلغتك",
      search:"ابحث بلغة أو اسم أو رقم",searchIn:l=>"ابحث داخل "+l,
      home:"اختر اللغة",homeCity:"اختر المدينة",homeReg:"اختر المنطقة",citiesWord:"مدينة",homeCont:"اختر القارة",
-     tabNat:"الجنسيات",tabCity:"المناطق",tabOrg:"الجهات",tabYear:"التحديثات",orgCount:n=>n+" جهة",pageOf:(a,b,t)=>"صفحة "+a+" من "+b+" · "+t+" سجلاً",settings:"الإعدادات",tabLook:"المظهر",tabView:"العرض",tabInfo:"معلومات",abT1:"ما هو",abT2:"هدفه",abT3:"كيف تستفيد",abT4:"التحديث",admT1:"السجلات",admT2:"بناء منطقة",admT3:"استيراد",admT4:"تصدير",bldT:"بناء منطقة كاملة",bldH:"منطقة ← مدينة ← دعاة. الجنسية تُشتق من اللغة تلقائياً.",bs1:"المنطقة",bs2:"المدينة",bs3:"الدعاة",bNewReg:"+ منطقة جديدة",bNewCity:"+ مدينة جديدة",bRegAr:"اسم المنطقة بالعربية",bRegEn:"Region name in English",bCityAr:"اسم المدينة بالعربية",bCityEn:"City name in English",bCreate:"إنشاء",bNext:"التالي",bBack:"رجوع",bFinish:"إنهاء",bAddOne:"إضافة داعية",bIn:"في",bCount:"دعاة مضافون",bNatOf:"الجنسيات المستنتجة",bNoLang:"اختر لغة واحدة على الأقل",bDone:"تمّ. راجع «تصدير» لنشر التحديث.",bEmpty:"لم تُضف مدن بعد",nlT:"لغة أو جنسية جديدة",nlH:"إن لم تجد لغة الداعي أو جنسيته في القوائم، أضفها هنا مرة واحدة فتظهر بعدها في كل النماذج.",nlLang:"لغة جديدة",nlNat:"جنسية جديدة",nlLangAr:"اسم اللغة بالعربية",nlLangEn:"Language name in English",nlGlyph:"كلمة بحروف اللغة (اختياري)",nlNatAr:"اسم الدولة بالعربية",nlNatEn:"Country name in English",nlPickLang:"لغات هذه الجنسية (اختر واحدة فأكثر)",nlAdd:"إضافة",nlOkL:"أُضيفت اللغة",nlOkN:"أُضيفت الجنسية",share:"إرسال",shareOne:"إرسال الرقم",select:"تحديد",selDone:"إنهاء التحديد",selCount:"محدَّد",selSend:"إرسال",selClear:"مسح",shareHead:"أرقام دعاة ومترجمين",shareFoot:"من دليل الدعاة والمترجمين",resTitle2:"مواد دعوية",resPhones2:"أرقام لطلب المواد",resSites2:"مواقع تعريفية",resNamed2:"كتب ومواد متوفرة",admTitle:"لوحة التحكم",admHint:"التعديلات تُحفظ في هذا الجهاز ولا تمس الملف الأصلي حتى تُصدِّرها.",admTotal:"الإجمالي",admAdded:"مضاف",admDeleted:"محذوف",admAdd:"إضافة داعية",admEditT:"تعديل السجلات",admEditH:"ابحث بالاسم أو الرقم، ثم عدِّل أو احذف.",admFind:"ابحث في السجلات",admEdit:"تعديل",admDel:"حذف",admUndo:"تراجع",admImpT:"استيراد دفعة",admImpH:"ملف JSON من قائم آخر أو من ملصق جديد. الدمج بالرقم: الرقم الجديد يُضاف، والموجود يُحدَّث، والمتعارض يُوسم ولا يُخمَّن.",admExpT:"تصدير ونشر",admExpH:"ينزّل daleel.json و version.json — ارفعهما إلى مجلد data وينتهي الأمر.",admExp:"تصدير نسخة محدَّثة",impNew:"جديد",impUpd:"محدَّث",impSame:"بلا تغيير",impBad:"مرفوض",impConf:"متعارض ومُوسَم",impErr:"تعذّرت قراءة الملف",fSaveEdit:"حفظ التعديل",fCity:"المدينة (اختياري)",navDir:"الدليل",navAbout:"عن الدليل",navSet:"الإعدادات",sLang:"لغة الواجهة",sAbout:"عن الدليل",sVer:"نسخة البيانات",sWays:"طرق أخرى للتصفّح",instT:"تثبيت التطبيق",instS:"يفتح من شاشتك مباشرة ويعمل بلا إنترنت",instDone:"مثبَّت على هذا الجهاز",instNow:"تثبيت",instIosT:"للتثبيت على آيفون",instIos:"اضغط زر المشاركة في أسفل سفاري، ثم اختر «إضافة إلى الشاشة الرئيسية».",instLater:"لاحقاً",instBan:"ثبّت الدليل على شاشتك",instDoneBtn:"تم",instYes:"مثبَّت",instNo:"غير مثبَّت",instYesS:"الدليل مثبَّت على هذا الجهاز ويعمل بلا إنترنت",instNoS:"غير مثبَّت — اضغط للتثبيت على شاشتك",instNoIos:"غير مثبَّت — اضغط لمعرفة طريقة التثبيت على آيفون",aboutSub:"المشروع ورسالته",sAboutSub:"ما هو الدليل وكيف تستفيد منه",wayReg:"المناطق",wayRegS:"المدن القريبة منك",wayOrg:"الجهات",wayOrgS:"الجمعيات ومكاتب الدعوة",wayYear:"سنة الملصق",wayYearS:"أحدث التحديثات",wayRes:"مواد دعوية",wayResS:"كتب ومواقع وأرقام",sMain:"التطبيق",sTheme:"المظهر",sPerPage:"بطاقات لكل صفحة",sAuto:"تلقائي",sAutoHint:n=>"التلقائي يختار الآن "+n+" حسب عرض شاشتك",sEdit:"أدوات القائمين",sAdd:"إضافة داعية",sEditHint:"لفتح أدوات التحرير أضف ?edit إلى الرابط",fName:"الاسم",fPhone:"الجوال (10 خانات)",fOrg:"الجهة (اختياري)",fOrgDefault:"إضافة يدوية",fWomen:"داعية للنساء",fLangs:"اللغات (اختر واحدة فأكثر)",fSave:"حفظ",eName:"اكتب الاسم",ePhone:"الرقم يجب أن يكون 10 خانات ويبدأ بـ 0",eDup:"هذا الرقم موجود أصلاً",eLang:"اختر لغة واحدة على الأقل",homeYear:"اختر سنة الملصق الهجرية",yearOf:" — سنة الملصق",noDate:"بلا تاريخ",stLang:"لغة",stOrg:"جهة",stWomen:"داعية",stFlag:"تنبيه",resTitle:"مواد دعوية",resLink:"مواد دعوية وكتب ومواقع ›",
+     tabNat:"الجنسيات",tabCity:"المناطق",tabOrg:"الجهات",tabYear:"التحديثات",orgCount:n=>n+" جهة",pageOf:(a,b,t)=>"صفحة "+a+" من "+b+" · "+t+" سجلاً",settings:"الإعدادات",sThemeH:"تُحفظ في هذا الجهاز",sStats:"الدليل بالأرقام",stDaee:"داعياً",stLang:"لغة",stNat:"جنسية",stCity:"مدينة",sVerH:"تتحدّث تلقائياً عند نشر نسخة جديدة",sEditOpen:"إضافة وتعديل واستيراد وتصدير",sEditHint2:"أدوات القائمين تُفتح بإضافة ?edit إلى الرابط.",waqf1:"هذا العمل وقفٌ لخدمة الدعوة إلى الله تعالى.",waqf2:"نسأل الله أن يجعله خالصًا لوجهه الكريم، وأن ينفع به، وأن يغفر لمن ساهم فيه ولوالديه ولجميع المسلمين.",tabLook:"المظهر",tabView:"العرض",tabInfo:"معلومات",abT1:"ما هو",abT2:"هدفه",abT3:"كيف تستفيد",abT4:"التحديث",admT1:"السجلات",admT2:"بناء منطقة",admT3:"استيراد",admT4:"تصدير",bldT:"بناء منطقة كاملة",bldH:"منطقة ← مدينة ← دعاة. الجنسية تُشتق من اللغة تلقائياً.",bs1:"المنطقة",bs2:"المدينة",bs3:"الدعاة",bNewReg:"+ منطقة جديدة",bNewCity:"+ مدينة جديدة",bRegAr:"اسم المنطقة بالعربية",bRegEn:"Region name in English",bCityAr:"اسم المدينة بالعربية",bCityEn:"City name in English",bCreate:"إنشاء",bNext:"التالي",bBack:"رجوع",bFinish:"إنهاء",bAddOne:"إضافة داعية",bIn:"في",bCount:"دعاة مضافون",bNatOf:"الجنسيات المستنتجة",bNoLang:"اختر لغة واحدة على الأقل",bDone:"تمّ. راجع «تصدير» لنشر التحديث.",bEmpty:"لم تُضف مدن بعد",nlT:"لغة أو جنسية جديدة",nlH:"إن لم تجد لغة الداعي أو جنسيته في القوائم، أضفها هنا مرة واحدة فتظهر بعدها في كل النماذج.",nlLang:"لغة جديدة",nlNat:"جنسية جديدة",nlLangAr:"اسم اللغة بالعربية",nlLangEn:"Language name in English",nlGlyph:"كلمة بحروف اللغة (اختياري)",nlNatAr:"اسم الدولة بالعربية",nlNatEn:"Country name in English",nlPickLang:"لغات هذه الجنسية (اختر واحدة فأكثر)",nlAdd:"إضافة",nlOkL:"أُضيفت اللغة",nlOkN:"أُضيفت الجنسية",share:"إرسال",shareOne:"إرسال الرقم",select:"تحديد",selDone:"إنهاء التحديد",selCount:"محدَّد",selSend:"إرسال",selClear:"مسح",shareHead:"أرقام دعاة ومترجمين",shareFoot:"من دليل الدعاة والمترجمين",resTitle2:"مواد دعوية",resPhones2:"أرقام لطلب المواد",resSites2:"مواقع تعريفية",resNamed2:"كتب ومواد متوفرة",admTitle:"لوحة التحكم",admHint:"التعديلات تُحفظ في هذا الجهاز ولا تمس الملف الأصلي حتى تُصدِّرها.",admTotal:"الإجمالي",admAdded:"مضاف",admDeleted:"محذوف",admAdd:"إضافة داعية",admEditT:"تعديل السجلات",admEditH:"ابحث بالاسم أو الرقم، ثم عدِّل أو احذف.",admFind:"ابحث في السجلات",admEdit:"تعديل",admDel:"حذف",admUndo:"تراجع",admImpT:"استيراد دفعة",admImpH:"ملف JSON من قائم آخر أو من ملصق جديد. الدمج بالرقم: الرقم الجديد يُضاف، والموجود يُحدَّث، والمتعارض يُوسم ولا يُخمَّن.",admExpT:"تصدير ونشر",admExpH:"ينزّل daleel.json و version.json — ارفعهما إلى مجلد data وينتهي الأمر.",admExp:"تصدير نسخة محدَّثة",impNew:"جديد",impUpd:"محدَّث",impSame:"بلا تغيير",impBad:"مرفوض",impConf:"متعارض ومُوسَم",impErr:"تعذّرت قراءة الملف",fSaveEdit:"حفظ التعديل",fCity:"المدينة (اختياري)",navDir:"الدليل",navAbout:"عن الدليل",navSet:"الإعدادات",sLang:"لغة الواجهة",sAbout:"عن الدليل",sVer:"نسخة البيانات",sWays:"طرق أخرى للتصفّح",instT:"تثبيت التطبيق",instS:"يفتح من شاشتك مباشرة ويعمل بلا إنترنت",instDone:"مثبَّت على هذا الجهاز",instNow:"تثبيت",instIosT:"للتثبيت على آيفون",instIos:"اضغط زر المشاركة في أسفل سفاري، ثم اختر «إضافة إلى الشاشة الرئيسية».",instLater:"لاحقاً",instBan:"ثبّت الدليل على شاشتك",instDoneBtn:"تم",instYes:"مثبَّت",instNo:"غير مثبَّت",instYesS:"الدليل مثبَّت على هذا الجهاز ويعمل بلا إنترنت",instNoS:"غير مثبَّت — اضغط للتثبيت على شاشتك",instNoIos:"غير مثبَّت — اضغط لمعرفة طريقة التثبيت على آيفون",aboutSub:"المشروع ورسالته",sAboutSub:"ما هو الدليل وكيف تستفيد منه",wayReg:"المناطق",wayRegS:"المدن القريبة منك",wayOrg:"الجهات",wayOrgS:"الجمعيات ومكاتب الدعوة",wayYear:"سنة الملصق",wayYearS:"أحدث التحديثات",wayRes:"مواد دعوية",wayResS:"كتب ومواقع وأرقام",sMain:"التطبيق",sTheme:"المظهر",sPerPage:"بطاقات لكل صفحة",sAuto:"تلقائي",sAutoHint:n=>"التلقائي يختار الآن "+n+" حسب عرض شاشتك",sEdit:"أدوات القائمين",sAdd:"إضافة داعية",sEditHint:"لفتح أدوات التحرير أضف ?edit إلى الرابط",fName:"الاسم",fPhone:"الجوال (10 خانات)",fOrg:"الجهة (اختياري)",fOrgDefault:"إضافة يدوية",fWomen:"داعية للنساء",fLangs:"اللغات (اختر واحدة فأكثر)",fSave:"حفظ",eName:"اكتب الاسم",ePhone:"الرقم يجب أن يكون 10 خانات ويبدأ بـ 0",eDup:"هذا الرقم موجود أصلاً",eLang:"اختر لغة واحدة على الأقل",homeYear:"اختر سنة الملصق الهجرية",yearOf:" — سنة الملصق",noDate:"بلا تاريخ",stLang:"لغة",stOrg:"جهة",stWomen:"داعية",stFlag:"تنبيه",resTitle:"مواد دعوية",resLink:"مواد دعوية وكتب ومواقع ›",
      resPhones:"أرقام موارد",resSites:"مواقع",resNamed:"كتب ومواد أخرى",
      resNote:"الكتب والمواقع غير المربوطة برابط تُطلب عبر «كتب وصوتيات دعوية» أعلاه.",
      admin:"لوحة القائمين",adminLink:"لوحة القائمين ›",aStaleOrg:"جهات آخر ملصق لها 1447هـ",
@@ -1059,7 +1194,7 @@ const T = {
  en:{title:"Dawah Interpreters",tag:"Reach a preacher in your language",
      search:"Search by language, name or number",searchIn:l=>"Search within "+l,
      home:"Choose a language",homeCity:"Choose a city",homeReg:"Choose a region",citiesWord:"cities",homeCont:"Choose a continent",
-     tabNat:"Nationalities",tabCity:"Regions",tabOrg:"Societies",tabYear:"Updates",orgCount:n=>n+" societies",pageOf:(a,b,t)=>"Page "+a+" of "+b+" · "+t+" records",settings:"Settings",tabLook:"Appearance",tabView:"Display",tabInfo:"Info",abT1:"What",abT2:"Purpose",abT3:"How to use",abT4:"Updates",admT1:"Records",admT2:"Build a region",admT3:"Import",admT4:"Export",bldT:"Build a whole region",bldH:"Region → city → preachers. Nationality is derived from language.",bs1:"Region",bs2:"City",bs3:"Preachers",bNewReg:"+ New region",bNewCity:"+ New city",bRegAr:"Region name (Arabic)",bRegEn:"Region name (English)",bCityAr:"City name (Arabic)",bCityEn:"City name (English)",bCreate:"Create",bNext:"Next",bBack:"Back",bFinish:"Finish",bAddOne:"Add a preacher",bIn:"in",bCount:"preachers added",bNatOf:"Derived nationalities",bNoLang:"Pick at least one language",bDone:"Done. Use Export to publish the update.",bEmpty:"No cities added yet",nlT:"New language or nationality",nlH:"If a preacher's language or nationality is missing, add it once here and it appears in every form afterwards.",nlLang:"New language",nlNat:"New nationality",nlLangAr:"Language name (Arabic)",nlLangEn:"Language name (English)",nlGlyph:"A word in the language's script (optional)",nlNatAr:"Country name (Arabic)",nlNatEn:"Country name (English)",nlPickLang:"Languages of this nationality (pick one or more)",nlAdd:"Add",nlOkL:"Language added",nlOkN:"Nationality added",share:"Send",shareOne:"Send this number",select:"Select",selDone:"Done",selCount:"selected",selSend:"Send",selClear:"Clear",shareHead:"Dawah interpreters",shareFoot:"From the Dawah Interpreters Directory",resTitle2:"Dawah resources",resPhones2:"Numbers to request materials",resSites2:"Introductory websites",resNamed2:"Available books & materials",admTitle:"Control panel",admHint:"Changes are saved on this device and never touch the source file until you export.",admTotal:"Total",admAdded:"added",admDeleted:"removed",admAdd:"Add a preacher",admEditT:"Edit records",admEditH:"Search by name or number, then edit or remove.",admFind:"Search records",admEdit:"Edit",admDel:"Remove",admUndo:"Undo",admImpT:"Import a batch",admImpH:"A JSON file from another maintainer or a new poster. Merged by number: new numbers are added, existing ones updated, conflicts flagged never guessed.",admExpT:"Export & publish",admExpH:"Downloads daleel.json and version.json — upload both to the data folder.",admExp:"Export updated file",impNew:"new",impUpd:"updated",impSame:"unchanged",impBad:"rejected",impConf:"conflicting, flagged",impErr:"Could not read the file",fSaveEdit:"Save changes",fCity:"City (optional)",navDir:"Directory",navAbout:"About",navSet:"Settings",sLang:"Interface language",sAbout:"About this directory",sVer:"Data version",sWays:"Other ways to browse",instT:"Install the app",instS:"Opens from your home screen and works offline",instDone:"Installed on this device",instNow:"Install",instIosT:"Install on iPhone",instIos:"Tap the Share button in Safari, then choose “Add to Home Screen”.",instLater:"Later",instBan:"Add the directory to your home screen",instDoneBtn:"Got it",instYes:"Installed",instNo:"Not installed",instYesS:"The directory is installed on this device and works offline",instNoS:"Not installed — tap to add it to your home screen",instNoIos:"Not installed — tap to see how to install on iPhone",aboutSub:"The project and its message",sAboutSub:"What it is and how to use it",wayReg:"Regions",wayRegS:"Cities near you",wayOrg:"Societies",wayOrgS:"Societies & dawah offices",wayYear:"Poster year",wayYearS:"Latest updates",wayRes:"Resources",wayResS:"Books, sites & numbers",sMain:"App",sTheme:"Appearance",sPerPage:"Cards per page",sAuto:"Auto",sAutoHint:n=>"Auto currently picks "+n+" for your screen width",sEdit:"Maintainer tools",sAdd:"Add a preacher",sEditHint:"Add ?edit to the URL to open maintainer tools",fName:"Name",fPhone:"Mobile (10 digits)",fOrg:"Society (optional)",fOrgDefault:"Manually added",fWomen:"Serves women",fLangs:"Languages (pick one or more)",fSave:"Save",eName:"Enter a name",ePhone:"Number must be 10 digits starting with 0",eDup:"This number already exists",eLang:"Pick at least one language",homeYear:"Choose the poster's Hijri year",yearOf:" \u2014 poster year (AH)",noDate:"No date",stLang:"languages",stOrg:"societies",stWomen:"women",stFlag:"flagged",resTitle:"Dawah resources",resLink:"Resources, books & sites \u203a",
+     tabNat:"Nationalities",tabCity:"Regions",tabOrg:"Societies",tabYear:"Updates",orgCount:n=>n+" societies",pageOf:(a,b,t)=>"Page "+a+" of "+b+" · "+t+" records",settings:"Settings",sThemeH:"Saved on this device",sStats:"The directory in numbers",stDaee:"preachers",stLang:"languages",stNat:"nationalities",stCity:"cities",sVerH:"Updates automatically when a new version is published",sEditOpen:"Add, edit, import and export",sEditHint2:"Maintainer tools open by adding ?edit to the link.",waqf1:"This work is an endowment (waqf) in the service of calling to Allah.",waqf2:"We ask Allah to make it sincerely for His noble countenance, to bring benefit through it, and to forgive whoever contributed to it, their parents, and all Muslims.",tabLook:"Appearance",tabView:"Display",tabInfo:"Info",abT1:"What",abT2:"Purpose",abT3:"How to use",abT4:"Updates",admT1:"Records",admT2:"Build a region",admT3:"Import",admT4:"Export",bldT:"Build a whole region",bldH:"Region → city → preachers. Nationality is derived from language.",bs1:"Region",bs2:"City",bs3:"Preachers",bNewReg:"+ New region",bNewCity:"+ New city",bRegAr:"Region name (Arabic)",bRegEn:"Region name (English)",bCityAr:"City name (Arabic)",bCityEn:"City name (English)",bCreate:"Create",bNext:"Next",bBack:"Back",bFinish:"Finish",bAddOne:"Add a preacher",bIn:"in",bCount:"preachers added",bNatOf:"Derived nationalities",bNoLang:"Pick at least one language",bDone:"Done. Use Export to publish the update.",bEmpty:"No cities added yet",nlT:"New language or nationality",nlH:"If a preacher's language or nationality is missing, add it once here and it appears in every form afterwards.",nlLang:"New language",nlNat:"New nationality",nlLangAr:"Language name (Arabic)",nlLangEn:"Language name (English)",nlGlyph:"A word in the language's script (optional)",nlNatAr:"Country name (Arabic)",nlNatEn:"Country name (English)",nlPickLang:"Languages of this nationality (pick one or more)",nlAdd:"Add",nlOkL:"Language added",nlOkN:"Nationality added",share:"Send",shareOne:"Send this number",select:"Select",selDone:"Done",selCount:"selected",selSend:"Send",selClear:"Clear",shareHead:"Dawah interpreters",shareFoot:"From the Dawah Interpreters Directory",resTitle2:"Dawah resources",resPhones2:"Numbers to request materials",resSites2:"Introductory websites",resNamed2:"Available books & materials",admTitle:"Control panel",admHint:"Changes are saved on this device and never touch the source file until you export.",admTotal:"Total",admAdded:"added",admDeleted:"removed",admAdd:"Add a preacher",admEditT:"Edit records",admEditH:"Search by name or number, then edit or remove.",admFind:"Search records",admEdit:"Edit",admDel:"Remove",admUndo:"Undo",admImpT:"Import a batch",admImpH:"A JSON file from another maintainer or a new poster. Merged by number: new numbers are added, existing ones updated, conflicts flagged never guessed.",admExpT:"Export & publish",admExpH:"Downloads daleel.json and version.json — upload both to the data folder.",admExp:"Export updated file",impNew:"new",impUpd:"updated",impSame:"unchanged",impBad:"rejected",impConf:"conflicting, flagged",impErr:"Could not read the file",fSaveEdit:"Save changes",fCity:"City (optional)",navDir:"Directory",navAbout:"About",navSet:"Settings",sLang:"Interface language",sAbout:"About this directory",sVer:"Data version",sWays:"Other ways to browse",instT:"Install the app",instS:"Opens from your home screen and works offline",instDone:"Installed on this device",instNow:"Install",instIosT:"Install on iPhone",instIos:"Tap the Share button in Safari, then choose “Add to Home Screen”.",instLater:"Later",instBan:"Add the directory to your home screen",instDoneBtn:"Got it",instYes:"Installed",instNo:"Not installed",instYesS:"The directory is installed on this device and works offline",instNoS:"Not installed — tap to add it to your home screen",instNoIos:"Not installed — tap to see how to install on iPhone",aboutSub:"The project and its message",sAboutSub:"What it is and how to use it",wayReg:"Regions",wayRegS:"Cities near you",wayOrg:"Societies",wayOrgS:"Societies & dawah offices",wayYear:"Poster year",wayYearS:"Latest updates",wayRes:"Resources",wayResS:"Books, sites & numbers",sMain:"App",sTheme:"Appearance",sPerPage:"Cards per page",sAuto:"Auto",sAutoHint:n=>"Auto currently picks "+n+" for your screen width",sEdit:"Maintainer tools",sAdd:"Add a preacher",sEditHint:"Add ?edit to the URL to open maintainer tools",fName:"Name",fPhone:"Mobile (10 digits)",fOrg:"Society (optional)",fOrgDefault:"Manually added",fWomen:"Serves women",fLangs:"Languages (pick one or more)",fSave:"Save",eName:"Enter a name",ePhone:"Number must be 10 digits starting with 0",eDup:"This number already exists",eLang:"Pick at least one language",homeYear:"Choose the poster's Hijri year",yearOf:" \u2014 poster year (AH)",noDate:"No date",stLang:"languages",stOrg:"societies",stWomen:"women",stFlag:"flagged",resTitle:"Dawah resources",resLink:"Resources, books & sites \u203a",
      resPhones:"Resource numbers",resSites:"Websites",resNamed:"Books & other materials",
      resNote:"Items without a link can be requested through the books & audio number above.",
      admin:"Maintainer dashboard",adminLink:"Maintainer dashboard \u203a",
@@ -1318,9 +1453,7 @@ function render(){
   document.body.dataset.nested=r.stage==="home"?"0":"1";
   $("tag").textContent=t.tag;
   $("q").placeholder=r.stage==="lang"?t.searchIn(L[r.key][ui]):t.search;
-  $("foot").innerHTML='<div class="waqf"><p class="w1">'+t.waqf1+'</p>'+
-    '<p class="w2">'+t.waqf2+'</p></div>'+
-    (r.stage==="home"?'<p class="src">'+t.foot+'</p>':'');
+  $("foot").innerHTML=(r.stage==="home"?'<p class="src">'+t.foot+'</p>':'');
   document.querySelectorAll(".toggle button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.ui===ui));
   const view=$("view");
   paintEditBar();
@@ -1329,7 +1462,7 @@ function render(){
 
   if(r.stage==="settings"){
     $("ttl").textContent=t.settings; $("meta").textContent="";
-    view.innerHTML=settingsTabs(); return;
+    view.innerHTML=settingsPage(); return;
   }
   if(r.stage==="res"){
     $("ttl").textContent=t.resTitle2; $("meta").textContent="";
@@ -1534,7 +1667,7 @@ $("view").addEventListener("click",e=>{
      بلا data-i، ويجب أن تبقى روابط tel: لا تنقلاً إلى #/p/undefined */
   /* لا بد من تقييده بـ .sw: العنصر <html> يحمل data-theme،
      فمحدِّد عام يلتقط كل نقرة في الصفحة ويبتلعها */
-  const th=e.target.closest(".sw[data-theme]");
+  const th=e.target.closest(".thm-row[data-theme]");
   if(th){ theme=th.dataset.theme; applyTheme(); saveState(); render(); return; }
   const ps=e.target.closest("[data-ps]");
   if(ps){ userPS=+ps.dataset.ps; page=1; saveState(); render(); return; }
@@ -1666,6 +1799,8 @@ function admTabs(){
 }
 
 /* ══════════ تبويبات الصفحة الواحدة ══════════ */
+const THEME_DEF = {paper:["paper","ورقي","Paper",0,"#F6EFE1","#2A2013","#5C4B33","#8A7757","#0F5F52","#3C7F73","#1D5AA8","#EDE2CD","#F1E7D5","#E7DCC6"],sky:["sky","سماوي","Sky",0,"#E9F1FB","#132437","#3E5470","#6C819B","#12508F","#4A7CB8","#0F6B4F","#DCE8F7","#E2ECF9","#D6E3F4"],mint:["mint","نعناعي","Mint",0,"#DCEDE2","#12291D","#3A5445","#68806F","#0B5B3F","#3E8168","#1D5AA8","#CFE5D7","#D5E9DC","#C8DFD1"],sand:["sand","رملي","Sand",0,"#EFE1C6","#2E2214","#5E4B31","#8B7554","#7E4310","#A5713E","#0F6B4F","#E5D4B3","#EADAC0","#DFCDA9"],ink:["ink","حبر ليلي","Night Ink",1,"#0B1B3A","#EDF1FA","#A8B6D4","#6E7EA0","#F0C070","#A88448","#6FD9C0","#13284F","#16224A","#1B3358"]};
+const ORN_STAR = "M20.0 9.4 L21.65 16.03 L27.5 12.5 L23.97 18.35 L30.6 20.0 L23.97 21.65 L27.5 27.5 L21.65 23.97 L20.0 30.6 L18.35 23.97 L12.5 27.5 L16.03 21.65 L9.4 20.0 L16.03 18.35 L12.5 12.5 L18.35 16.03 Z";
 const TAB = { about:0, settings:0, admin:0 };
 function tabsHTML(key, labels){
   return '<div class="ptabs" role="tablist" data-tabs="'+key+'">'+
@@ -2207,6 +2342,112 @@ function paintNav(){
 }
 
 /* الترس رابط إلى #/settings — لا لوحة منبثقة */
+
+/* ══════════ الإعدادات: صفحة مبنيّة لا صفوف مجمَّعة ══════════ */
+const SET_IC = {
+  install:'<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.6"/>'+
+          '<path d="M12 7v7M9 11.2l3 3 3-3"/></svg>',
+  done:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg>',
+  info:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.6"/></svg>',
+  data:'<svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="3"/>'+
+       '<path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></svg>',
+  edit:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14.5 5.5l4 4"/></svg>',
+};
+
+function thmPreview(p){
+  /* p = [id, ar, en, dark, bg, text, t2, t3, accent, ...] */
+  const bg=p[4], tx=p[5], t3=p[7], ac=p[8];
+  const soft = p[3] ? "rgba(255,255,255,.13)" : "rgba(0,0,0,.10)";
+  return '<span class="thm-pv" style="background:'+bg+'">'+
+    '<i class="p-bar" style="background:'+soft+'"></i>'+
+    '<i class="p-dot" style="background:'+ac+'"></i>'+
+    '<i class="p-l1" style="background:'+tx+';opacity:.85"></i>'+
+    '<i class="p-l2" style="background:'+t3+'"></i>'+
+    '<i class="p-chip" style="background:'+ac+'"></i></span>';
+}
+
+function setThemes(){
+  const t=T[ui];
+  return '<section class="set-sec"><div class="set-h"><b>'+t.sTheme+'</b>'+
+    '<span>'+t.sThemeH+'</span></div><div class="thm">'+
+    THEMES.map(x=>{
+      const p=THEME_DEF[x[0]];
+      return '<button class="thm-row'+(theme===x[0]?" on":"")+'" type="button" '+
+        'data-theme="'+x[0]+'">'+thmPreview(p)+
+        '<span class="thm-nm"><b>'+esc(x[1])+'</b><span>'+esc(x[2])+'</span></span>'+
+        '<span class="thm-ck"></span></button>';
+    }).join("")+'</div></section>';
+}
+
+function setDisplay(){
+  const t=T[ui];
+  return '<section class="set-sec"><div class="set-h"><b>'+t.sLang+'</b></div>'+
+    '<div class="lang2">'+
+      '<button class="'+(ui==="ar"?"on":"")+'" type="button" data-uiset="ar">'+
+        '<b>العربية</b><span>Arabic</span></button>'+
+      '<button class="'+(ui==="en"?"on":"")+'" type="button" data-uiset="en">'+
+        '<b>English</b><span>الإنجليزية</span></button>'+
+    '</div></section>'+
+    '<section class="set-sec"><div class="set-h"><b>'+t.sPerPage+'</b>'+
+      '<span>'+t.sAutoHint(autoPS())+'</span></div>'+
+      '<div class="segs">'+
+        [[0,t.sAuto],[8,"8"],[12,"12"],[18,"18"],[30,"30"]].map(o=>
+          '<button class="seg'+(userPS===o[0]?" on":"")+'" type="button" data-ps="'+o[0]+
+          '">'+o[1]+'</button>').join("")+
+      '</div></section>';
+}
+
+function setInfo(){
+  const t=T[ui];
+  const inst = (typeof INSTALLED!=="undefined") && INSTALLED;
+  const langs=Object.keys(DATA.counts).length;
+  const nats=Object.keys(DATA.CO).length;
+  const cities=DATA.CITIES.filter(c=>c.n).length;
+
+  const row=(ic,ttl,sub,go,attr,cls)=>'<button class="set-row'+(cls||"")+'" type="button" '+
+    attr+'><span class="ic">'+SET_IC[ic]+'</span>'+
+    '<span class="tx"><b>'+ttl+'</b><span>'+sub+'</span></span>'+
+    '<span class="go">'+go+'</span></button>';
+
+  return '<section class="set-sec">'+
+      row(inst?"done":"install", t.instT,
+          (typeof installSub==="function"?installSub():t.instS),
+          (typeof installVal==="function"?installVal():"\u203a"),
+          'data-act="install"', inst?" done":"")+
+      row("info", t.sAbout, t.sAboutSub, "\u203a", 'data-go="#/about"')+
+    '</section>'+
+
+    '<section class="set-sec"><div class="set-h"><b>'+t.sStats+'</b></div>'+
+      '<div class="set-stats">'+
+        '<div><b>'+D.length+'</b><span>'+t.stDaee+'</span></div>'+
+        '<div><b>'+langs+'</b><span>'+t.stLang+'</span></div>'+
+        '<div><b>'+nats+'</b><span>'+t.stNat+'</span></div>'+
+        '<div><b>'+cities+'</b><span>'+t.stCity+'</span></div>'+
+      '</div>'+
+      '<div class="set-row" style="margin-top:8px;cursor:default">'+
+        '<span class="ic">'+SET_IC.data+'</span>'+
+        '<span class="tx"><b>'+t.sVer+'</b><span>'+t.sVerH+'</span></span>'+
+        '<span class="go">'+(DATA.v||"\u2014")+'</span></div>'+
+    '</section>'+
+
+    '<div class="waqf-set"><span class="orn"><svg viewBox="0 0 40 40">'+
+      '<path d="'+ORN_STAR+'"/></svg></span>'+
+      '<p>'+t.waqf1+'</p><p>'+t.waqf2+'</p></div>'+
+
+    (EDIT
+      ? '<section class="set-sec">'+
+          row("edit", t.admin, t.sEditOpen, "\u203a", 'data-act="admin"')+
+        '</section>'
+      : '<p class="set-note">'+t.sEditHint2+'</p>');
+}
+
+function settingsPage(){
+  const t=T[ui];
+  const panes=[setThemes(), setDisplay(), setInfo()];
+  return '<div class="set-wrap page-in">'+
+    tabsHTML("settings",[t.tabLook,t.tabView,t.tabInfo])+
+    '<div class="pane">'+panes[TAB.settings]+'</div></div>';
+}
 
 /* ═══════════════ الإعدادات: IndexedDB هو المرجع ═══════════════
    يبقى localStorage مرآةً للمظهر واللغة فقط، لأنهما يجب أن يُطبَّقا
