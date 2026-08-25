@@ -1,0 +1,38 @@
+{
+  "name": "دليل الدعاة والمترجمين",
+  "short_name": "دليل",
+  "description": "أرقام الدعاة والمترجمين في السعودية — يعمل بلا إنترنت",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "any",
+  "background_color": "#07090F",
+  "theme_color": "#07090F",
+  "categories": [
+    "education",
+    "reference",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
