@@ -650,6 +650,68 @@ body.picking .pickbar{display:flex}
 .imprep b{color:var(--champagne)}
 .imprep .bad{color:#FFAE93}
 
+/* ══════════ قوقعة التطبيق: إطار ثابت ومنطقة تمرير واحدة ══════════
+   قبلها كانت الصفحة كلها تتمرّر، فتغيب الترويسة والبحث وشريط التنقل.
+   الآن يبقى الإطار ثابتاً ويتحرّك المحتوى وحده — إحساس تطبيق لا صفحة. */
+html{height:100%}
+body{height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+/* منطقة التمرير هي حاوية المحتوى كلها، فتتحرك معها رسالة الوقف
+   بدل أن تقتطع ثلث الشاشة ثابتةً في الأسفل. */
+body > .wrap{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;scrollbar-width:thin}
+body > .wrap::-webkit-scrollbar{width:5px}
+body > .wrap::-webkit-scrollbar-thumb{background:var(--edge);border-radius:5px}
+body > .wrap::-webkit-scrollbar-track{background:transparent}
+/* البحث يبقى في الأعلى داخل منطقة التمرير */
+.search{position:sticky;top:0;z-index:30;
+  background:color-mix(in srgb, var(--bg) 94%, transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding-block:9px;margin-block:0}
+/* الصفحات المبوَّبة تتمرّر مع الحاوية، فلا حاجة لصندوق تمرير ثانٍ */
+.pane-scroll{max-height:none;overflow:visible}
+
+/* شاشات عريضة: استعمل العرض بدل إطالة الصفحة */
+@media (min-width:1100px){
+  .wrap{max-width:1320px}
+  .people-grid{grid-template-columns:repeat(5,1fr)!important}
+  .org-grid{grid-template-columns:repeat(4,1fr)}
+  .nat-grid{grid-template-columns:repeat(8,1fr)}
+}
+@media (min-width:1450px){
+  .people-grid{grid-template-columns:repeat(6,1fr)!important}
+  .org-grid{grid-template-columns:repeat(5,1fr)}
+}
+@media (min-width:900px){
+  .nav{position:static}          /* الصفحة لم تعد تتمرّر فلا معنى للالتصاق */
+  .org-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+/* رسالة الوقف تُعرض في الرئيسية وصفحة التعريف فقط؛ في القوائم كانت
+   تقتطع ١٥٠ بكسل ثابتة من ارتفاع الشاشة بلا فائدة. */
+body[data-nested="1"] #foot{display:none}
+
+/* حقل البحث لا يُمدّ على عرض الشاشة كلها في الحاسب */
+@media (min-width:900px){ .search{max-width:620px;margin-inline:auto} }
+
+/* الصفحات المبوَّبة تتمرّر داخل #view، فلا حاجة لصندوق تمرير ثانٍ */
+.pane-scroll{max-height:none;overflow:visible}
+
+/* شاشات عريضة: استعمل العرض بدل إطالة الصفحة */
+@media (min-width:1100px){
+  .wrap{max-width:1320px}
+  .people-grid{grid-template-columns:repeat(5,1fr)!important}
+  .org-grid{grid-template-columns:repeat(4,1fr)}
+  .nat-grid{grid-template-columns:repeat(8,1fr)}
+}
+@media (min-width:1450px){
+  .people-grid{grid-template-columns:repeat(6,1fr)!important}
+  .org-grid{grid-template-columns:repeat(5,1fr)}
+}
+@media (min-width:900px){
+  .nav{position:static}          /* الصفحة لم تعد تتمرّر فلا معنى للالتصاق */
+  .org-grid{grid-template-columns:repeat(4,1fr)}
+}
+
 /* ══════════ نموذج الإضافة/التعديل ══════════
    أُعيدت هذه القواعد: حُذفت سهواً في المرحلة الثانية حين استُبدلت كتلة
    اللوحات اللونية، فقد كانت تليها في نفس السلسلة النصية. النتيجة كانت
@@ -1020,7 +1082,25 @@ try{ const st=JSON.parse(localStorage.getItem("daleel")||"{}");
      if(st.ps) userPS=st.ps; if(st.theme) theme=st.theme; if(st.ui) ui=st.ui; }catch(e){}
 function saveState(){ try{ localStorage.setItem("daleel",
   JSON.stringify({ps:userPS,theme:theme,ui:ui})); }catch(e){} }
-function autoPS(){ const w=innerWidth; return w<520?10:(w<900?18:32); }
+/* عدد البطاقات يُحسب من ارتفاع الشاشة أيضاً لا من عرضها وحده،
+   وإلا امتلأ الحاسب بـ٣٢ بطاقة في ٨ صفوف فطالت الصفحة أكثر من الجوال. */
+function autoPS(){
+  const w=innerWidth;
+  const cols = w<520?2 : w<800?3 : w<1100?4 : (w<1450?5:6);
+  /* الارتفاع المتاح يُقاس من صندوق العرض نفسه لا من الشاشة،
+     لأن الترويسة والبحث وشريط اللغات تختلف من صفحة لأخرى. */
+  const v = document.querySelector("body > .wrap");
+  const g = document.querySelector(".people-grid");
+  let avail;
+  if(v && g){
+    avail = v.clientHeight - (g.getBoundingClientRect().top - v.getBoundingClientRect().top);
+  }else{
+    avail = (v ? v.clientHeight : innerHeight - 260) - 200;
+  }
+  const rows = Math.max(1, Math.floor(avail / 104));
+  /* حدّ أدنى ١٠ حتى لا يتحوّل الجوال إلى ١٥ صفحة؛ منطقة العرض تتمرّر قليلاً */
+  return Math.max(10, Math.min(48, cols * rows));
+}
 function PS(){ return userPS || autoPS(); }
 Object.defineProperty(window,"PSIZE",{get:PS});
 addEventListener("resize",()=>{ if(!userPS) render(); });
