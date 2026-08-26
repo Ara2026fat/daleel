@@ -1313,7 +1313,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "352-fc9428ddb2";
-const BUILD_ID    = "42a2ca840e";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "59989c2663";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -2736,6 +2736,8 @@ function setInfo(){
         '<div><b>'+nats+'</b><span>'+t.stNat+'</span></div>'+
         '<div><b>'+cities+'</b><span>'+t.stCity+'</span></div>'+
       '</div>'+
+      /* بصمات الملفات تشخيصٌ للقائمين لا للمستخدم: تظهر مع ?edit فقط */
+      (EDIT ?
       '<div class="set-row" style="margin-top:8px;cursor:default">'+
         '<span class="ic">'+SET_IC.data+'</span>'+
         '<span class="tx"><b>'+t.sVer+'</b><span>'+t.sVerH+'</span></span>'+
@@ -2743,7 +2745,7 @@ function setInfo(){
       '<div class="set-row" style="margin-top:8px;cursor:default">'+
         '<span class="ic">'+SET_IC.edit+'</span>'+
         '<span class="tx"><b>'+t.sBuild+'</b><span>'+t.sBuildH+'</span></span>'+
-        '<span class="go">'+(typeof BUILD_ID!=="undefined"?BUILD_ID:"\u2014")+'</span></div>'+
+        '<span class="go">'+(typeof BUILD_ID!=="undefined"?BUILD_ID:"\u2014")+'</span></div>' : '')+
     '</section>'+
 
     '<div class="waqf-set"><span class="orn"><svg viewBox="0 0 40 40">'+
@@ -2754,7 +2756,7 @@ function setInfo(){
       ? '<section class="set-sec">'+
           row("edit", t.admin, t.sEditOpen, "\u203a", 'data-act="admin"')+
         '</section>'
-      : '<p class="set-note">'+t.sEditHint2+'</p>');
+      : '');   /* لا نُعلن باب القائمين لكل مستخدم */
 }
 
 function settingsPage(){
