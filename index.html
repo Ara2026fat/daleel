@@ -1335,7 +1335,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "414-ad1a868846";
-const BUILD_ID    = "40ae1ca9c7";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "27917a953d";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -2893,9 +2893,11 @@ function gpager(total, ps, n){
 
 /* ── التصحيح بعد الرسم: القياس يقين والحساب تقدير ── */
 let FIT_ADJ = 0;            /* كم بطاقة نُنقص لتستقرّ الشاشة */
-let FIT_PASS = 0;           /* جولات التصحيح، محدودة كي لا تدور بلا نهاية */
+let FIT_PASS = 0;           /* جولات التوسيع، محدودة كي لا تدور بلا نهاية */
+let FIT_TIGHT = 0;          /* جولات التضييق: ميزانية مستقلة */
+let FIT_GREW = false;       /* وسّعنا مرة؟ فلا نعود إليه بعد تضييق */
 function resetFit(){
-  FIT_ADJ = 0; FIT_PASS = 0;
+  FIT_ADJ = 0; FIT_PASS = 0; FIT_TIGHT = 0; FIT_GREW = false;
   const v = document.getElementById("view");
   if (v) v.style.zoom = "";        /* التصغير لا يُورَّث بين الصفحات */
 }
@@ -2915,11 +2917,16 @@ function fitScreen(){
   const over = box.scrollHeight - box.clientHeight;
 
   if (over > 8) {                       /* ضيق: أنقص صفاً أو أكثر */
-    /* بلغت الشبكة حدّها الأدنى ومازال يفيض — والفائض من شريط اللغات
-       أو الترويسة لا من البطاقات. عندها يُصغَّر اللوح كصفحات النصّ. */
+    /* التضييق له ميزانية مستقلة عن التوسيع: التوسيع رفاهية، والتضييق
+       ضرورة. كان يتشاركان عدّاداً واحداً فيستنفده التوسيع ثم يعجز
+       التضييق فتبقى الصفحة تنزل. */
+    FIT_GREW = false;
     if (grid.children.length <= cols) { shrinkToFit(box); return; }
+    if (FIT_TIGHT >= 6) return;
+    FIT_TIGHT++;
     FIT_ADJ += Math.max(cols, Math.ceil(over / rowH) * cols);
-    reflow();
+    FITTING = true; render(); FITTING = false;
+    setTimeout(fitScreen, 0);
     return;
   }
   /* سعة: أول رسم يقدّر ارتفاع البطاقة تقديراً، فقد يُنقص صفوفاً.
@@ -2930,9 +2937,14 @@ function fitScreen(){
     ? box.clientHeight - (last.getBoundingClientRect().bottom -
                           box.getBoundingClientRect().top)
     : 0;
-  if (isNat && spare >= rowH && GRID_SHOWN < GRID_TOTAL && FIT_ADJ > -cols * 6){
-    FIT_ADJ -= Math.floor(spare / rowH) * cols;
-    reflow();
+  /* التوسيع صفٌّ واحد في كل جولة لا قفزة: القفزة كانت تتجاوز الحدّ
+     فتحتاج تضييقاً، فتستنفد الجولات وتنتهي الصفحة فائضة. */
+  if (isNat && !FIT_GREW && spare >= rowH * 1.05 &&
+      GRID_SHOWN < GRID_TOTAL && FIT_PASS < 4){
+    FIT_PASS++;
+    FIT_ADJ -= cols;
+    FITTING = true; render(); FITTING = false;
+    setTimeout(fitScreen, 0);
   }
 }
 
@@ -2941,8 +2953,8 @@ function shrinkToFit(box){
   const view = document.getElementById("view");
   if (!view) return;
   if (box.scrollHeight - box.clientHeight <= 8) return;
-  if (FIT_PASS >= 5) return;
-  FIT_PASS++;
+  if (FIT_TIGHT >= 6) return;
+  FIT_TIGHT++;
   const cur = parseFloat(view.style.zoom) || 1;
   view.style.zoom = Math.max(0.72, cur * (box.clientHeight / box.scrollHeight) - 0.004);
   setTimeout(fitScreen, 0);
@@ -2950,8 +2962,8 @@ function shrinkToFit(box){
 
 /* إعادة رسم مصحِّحة ثم جولة فحص أخرى: التوسيع قد يتجاوز فيلزمه تضييق */
 function reflow(){
-  if (FIT_PASS >= 4) return;
-  FIT_PASS++;
+  if (FIT_TIGHT >= 6) return;
+  FIT_TIGHT++;
   FITTING = true; render(); FITTING = false;
   setTimeout(fitScreen, 0);
 }
