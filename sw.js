@@ -59,8 +59,14 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  /* التنقّل: القشرة دائماً (التطبيق أحادي الصفحة) */
+  /* التنقّل: القشرة للتطبيق وحده.
+     كان يردّ بـindex.html على كل تصفّح — بُني حين كان الدليل الصفحة
+     الوحيدة — فلما أُضيف intro.html ابتلعه وصار من يفتح رابط الملف
+     التعريفي يرى الدليل. الآن يُستثنى كل ملف .html غير القشرة. */
   if (req.mode === "navigate") {
+    const p = url.pathname;
+    const isShell = p.endsWith("/") || p.endsWith("/index.html");
+    if (!isShell) return;                 /* intro.html وغيره: من الشبكة */
     e.respondWith(
       caches.match("./index.html").then(hit => hit || fetch(req))
     );
