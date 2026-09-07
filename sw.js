@@ -1,135 +1,85 @@
-/* ═══════════════════════════════════════════════════════════════
-   زاحِم — عاملُ الخدمة
-   ═══════════════════════════════════════════════════════════════
-   قاعدةُ التحديث
-   ───────────────────────────────────────────────────────────────
-   صفحاتُ التصفّح تُطلب من الشبكة أوّلًا، والذاكرةُ احتياطٌ عند
-   الانقطاع — فلا تعلق على نسخةٍ قديمةٍ ولو نسيتَ رفعَ الرقم.
+/* عامل الخدمة — دليل الدعاة والمترجمين
+   القشرة: cache-first (فتح فوري وبلا إنترنت)
+   البيانات: network-first مع رجوع للمخزن (حتى يصل التحديث)
+   الخطوط: cache-first بعد أول تحميل (لا تُجلب من الشبكة ثانيةً) */
+const SHELL = "daleel-shell-0afafa1d0b";
+const DATA  = "daleel-data-v1";
+const FONTS = "daleel-fonts-v1";
+const KEEP  = [SHELL, DATA, FONTS];
 
-   ومع ذلك: **غيّر التاريخَ في السطر التالي مع كلّ نشرة.**
-   رقمٌ واحدٌ يُبطل القديمَ كلَّه ويُنظّف مخازنَه.
+const FILES = ["./","./index.html","./manifest.webmanifest",
+               "./icon.png","./daleel-data.json"];
 
-   وخطوطُ المصحف في مخزنٍ اسمُه ثابتٌ لا يتبدّل مع الإصدارات،
-   فرفعُ الرقم لا يُسقطها ولا يُعيد تنزيلَ ميغاباتٍ بلا حاجة.
-   ═══════════════════════════════════════════════════════════════ */
-
-const VERSION = 'zahim-2026-09-07';        // ← ارفعه مع كلّ نشرة
-const SHELL   = VERSION + '-shell';
-const RUNTIME = VERSION + '-runtime';
-
-/* مخزنُ المصحف والخطوط: اسمُه ثابتٌ عمدًا فلا يُمحى مع تبديل
-   الإصدار. ارفع رقمَه وحدَه إن تبدّل مصدرُ الخطوط أو الرسم. */
-const QURAN = 'zahim-quran-v1';
-
-/* ما يبقى بعد التفعيل — وما سواه يُمحى */
-const KEEP = [SHELL, RUNTIME, QURAN];
-
-/* ما يُحفظ عند التثبيت. أبقِ القائمة قصيرة: كلُّ إخفاقٍ هنا
-   يُفشل التثبيت كلَّه. */
-const SHELL_URLS = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
-];
-
-/* ═══ التثبيت ═══ */
-self.addEventListener('install', event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(SHELL);
-    /* addAll يسقط كلُّه بسقوط واحد، فنضيف كلًّا على حدة */
-    await Promise.all(SHELL_URLS.map(u =>
-      cache.add(new Request(u, { cache: 'reload' })).catch(() => {})
-    ));
-    /* لا ننتظر إغلاق كلّ الألسنة: النسخةُ الجديدة تحلّ فورًا */
-    await self.skipWaiting();
-  })());
+self.addEventListener("install", e => {
+  e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)));
+  /* بلا skipWaiting: النسخة الجديدة تنتظر موافقة المستخدم */
 });
 
-/* ═══ التفعيل: تُمحى مخازنُ الإصدارات السابقة، ويبقى المصحف ═══ */
-self.addEventListener('activate', event => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(
-      keys.filter(k => !KEEP.includes(k)).map(k => caches.delete(k))
-    );
-    await self.clients.claim();
-  })());
+self.addEventListener("activate", e => {
+  e.waitUntil(
+    caches.keys()
+      .then(ks => Promise.all(ks.filter(k => !KEEP.includes(k)).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
 });
 
-/* ═══ الجلب ═══ */
-self.addEventListener('fetch', event => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
+self.addEventListener("message", e => {
+  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
+});
 
+self.addEventListener("fetch", e => {
+  const req = e.request;
+  if (req.method !== "GET") return;
   const url = new URL(req.url);
 
-  /* ١. صفحاتُ التصفّح: الشبكةُ أوّلًا.
-        وهذا هو الفرقُ الحاسم — لو كانت الذاكرةُ أوّلًا لبقيت على
-        القديم حتى بعد تغيير الإصدار. */
-  if (req.mode === 'navigate') {
-    event.respondWith((async () => {
-      try {
-        const fresh = await fetch(req);
-        const cache = await caches.open(SHELL);
-        cache.put('./index.html', fresh.clone());
-        return fresh;
-      } catch (e) {
-        return (await caches.match('./index.html')) || Response.error();
-      }
-    })());
-    return;
-  }
-
-  /* ٢. المصحفُ وخطوطُه: الذاكرةُ أوّلًا. لا تتبدّل، وحجمُها كبير.
-        ومخزنُها مستقلٌّ عن الإصدار فتنجو من كلّ نشرة. */
-  const isQuran =
-    url.hostname.includes('githubusercontent.com') ||
-    url.hostname.includes('jsdelivr.net') ||
-    url.hostname.includes('fonts.gstatic.com');
-
-  if (isQuran) {
-    event.respondWith((async () => {
-      const hit = await caches.match(req, { cacheName: QURAN });
-      if (hit) return hit;
-      try {
-        const res = await fetch(req);
-        if (res && res.status === 200) {
-          const cache = await caches.open(QURAN);
-          cache.put(req, res.clone());
-        }
+  /* الخطوط: تُخزَّن بعد أول جلب فيعمل التطبيق بلا إنترنت */
+  if (/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) {
+    e.respondWith(
+      caches.match(req).then(hit => hit || fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(FONTS).then(c => c.put(req, copy)).catch(() => {});
         return res;
-      } catch (e) {
-        /* قد تكون محفوظةً في مخزنٍ قديمٍ قبل هذا التقسيم */
-        return (await caches.match(req)) || Response.error();
-      }
-    })());
-    return;
-  }
-
-  /* ٣. ما بقي من أصولنا: الذاكرةُ أوّلًا مع تحديثٍ صامتٍ في الخلفيّة،
-        فيُعرض السريعُ ويُحدَّث للمرّة القادمة. */
-  if (url.origin === self.location.origin) {
-    event.respondWith((async () => {
-      const hit = await caches.match(req);
-      const net = fetch(req).then(res => {
-        if (res && res.status === 200) {
-          caches.open(RUNTIME).then(c => c.put(req, res.clone()));
-        }
-        return res;
-      }).catch(() => hit || Response.error());
-      return hit || net;
-    })());
-  }
-});
-
-/* ═══ للطوارئ: تفريغُ كلّ المخازن من وحدة التحكّم ═══
-     navigator.serviceWorker.controller.postMessage('zahim-purge');   */
-self.addEventListener('message', event => {
-  if (event.data === 'zahim-purge') {
-    event.waitUntil(
-      caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
+      }).catch(() => hit))
     );
+    return;
   }
+
+  if (url.origin !== location.origin) return;
+
+  /* البيانات: الشبكة أولاً ليصل التحديث، والمخزن شبكة أمان */
+  if (url.pathname.endsWith("daleel-data.json")) {
+    e.respondWith(
+      fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(DATA).then(c => c.put(req, copy)).catch(() => {});
+        return res;
+      }).catch(() => caches.match(req).then(hit => hit ||
+        caches.match("./daleel-data.json")))
+    );
+    return;
+  }
+
+  /* التنقّل: القشرة للتطبيق وحده.
+     كان يردّ بـindex.html على كل تصفّح — بُني حين كان الدليل الصفحة
+     الوحيدة — فلما أُضيف intro.html ابتلعه وصار من يفتح رابط الملف
+     التعريفي يرى الدليل. الآن يُستثنى كل ملف .html غير القشرة. */
+  if (req.mode === "navigate") {
+    const p = url.pathname;
+    const isShell = p.endsWith("/") || p.endsWith("/index.html");
+    if (!isShell) return;                 /* intro.html وغيره: من الشبكة */
+    e.respondWith(
+      caches.match("./index.html").then(hit => hit || fetch(req))
+    );
+    return;
+  }
+
+  e.respondWith(
+    caches.match(req).then(hit => hit || fetch(req).then(res => {
+      if (res.ok && res.type === "basic") {
+        const copy = res.clone();
+        caches.open(SHELL).then(c => c.put(req, copy)).catch(() => {});
+      }
+      return res;
+    }))
+  );
 });
