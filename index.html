@@ -1374,6 +1374,51 @@ html[data-theme="ink"]{
 .pgwrap .pager{margin:5px 0 0}
 .pager{margin:8px 0}
 
+/* ══════════════ عمق البطاقات ══════════════ */
+.way,.cell{
+  background:linear-gradient(168deg,var(--a2,var(--glass-1)),var(--a3,var(--glass-2)));
+  border:1px solid var(--edge);
+  box-shadow:0 2px 4px rgba(0,0,0,.05),0 8px 18px -6px rgba(0,0,0,.13),
+             inset 0 1px 0 rgba(255,255,255,.55);
+  transition:transform .14s ease,box-shadow .2s ease,border-color .2s ease;
+  position:relative;overflow:hidden}
+.way{border-radius:20px;padding:22px 8px 18px;gap:11px}
+.way svg{width:29px;height:29px;stroke-width:1.5}
+.way b{font-size:13.5px;color:var(--text)}
+.way .tn{font-size:12px;color:var(--text-3);margin-top:2px;opacity:1}
+.cell{border-radius:20px;min-height:104px;padding:14px 8px}
+.cell.wide{min-height:76px;padding:12px 10px}
+.way:active,.cell:active{transform:translateY(2px);
+  box-shadow:0 1px 2px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.4)}
+
+/* العدد بطلاً — في الجنسيات واللغات وحدهما: هناك المفاضلة بالعدد
+   حقيقية (الهند مئةٌ وتسعة عشر قبل سريلانكا واحدٍ وأربعين) */
+.nat-grid > .cell .cc,.lgrid .cell .cc{position:static;border:0;padding:0;
+  font-size:25px;font-weight:600;line-height:1.1;color:var(--champagne);
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:1px}
+.nat-grid > .cell,.lgrid .cell{gap:3px}
+.nat-grid > .cell .cn,.lgrid .cell .cn{font-size:12px;font-weight:500;color:var(--text-2)}
+/* الشبكات ذات السطر الوصفي (المناطق، السنوات) تُبقي العدّاد شارةً:
+   لا مفاضلة بالعدد فيها، والسطر تحت الاسم يزاحمه لو كبر */
+.cell.wide .cc{position:absolute;top:7px;inset-inline-end:8px;font-size:9.5px;
+  font-weight:400;color:var(--champagne-dim);border:1px solid var(--edge-lit);
+  border-radius:999px;padding:3px 6px;margin:0}
+
+/* لمعةٌ تمرّ مرّةً عند اللمس: تُشعر باللمسة ولا تلفت إلى نفسها */
+.way.tap::after,.cell.tap::after{content:"";position:absolute;inset:0;
+  pointer-events:none;background:linear-gradient(105deg,transparent 38%,
+  rgba(255,255,255,.34) 50%,transparent 62%);
+  transform:translateX(-140%);animation:sheen .55s ease-out 1}
+@keyframes sheen{to{transform:translateX(140%)}}
+@media (prefers-reduced-motion:reduce){
+  .way.tap::after,.cell.tap::after{animation:none;opacity:0}
+  .way:active,.cell:active{transform:none}
+}
+@media (max-width:340px){
+  .way{padding:17px 5px 14px}.way svg{width:25px;height:25px}
+  .cell{min-height:94px}.nat-grid > .cell .cc,.lgrid .cell .cc{font-size:22px}
+}
+
 /* احتياطي الخطوط: أول فتح بلا إنترنت يجب أن يُقرأ قبل وصول خطوط الويب */
 body,input,button,textarea,select{
   font-family:"IBM Plex Sans Arabic","Readex Pro","Noto Sans Arabic","Geeza Pro",
@@ -1485,7 +1530,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-ebd65ab38c";
-const BUILD_ID    = "fe2d88acc6";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "434c71ec83";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3115,10 +3160,9 @@ function fitScreen(){
     if (FIT_TIGHT >= 6) return;
     FIT_TIGHT++;
     /* سقفٌ للخطوة: أول رسمٍ يقدّر ارتفاع البطاقة تقديراً، فإن جاء
-       over ضخماً (صفحةٌ ذات رأسٍ طويل وقائمةٍ كبيرة) قفزت الخطوة
-       فهبط اللوح إلى بطاقتين وبقي — لأن شبكات الأشخاص تُضيَّق ولا
-       تُوسَّع. فالتقريب على مهل: أربعة صفوف في الجولة على الأكثر. */
-    FIT_ADJ += Math.min(cols * 4, Math.max(cols, Math.ceil(over / rowH) * cols));
+       over ضخماً قفزت الخطوة فهبط اللوح إلى بطاقتين. والتقريب على
+       مهل — صفّان في الجولة — والتوسيع أدناه يستدرك ما زاد. */
+    FIT_ADJ += Math.min(cols * 2, Math.max(cols, Math.ceil(over / rowH) * cols));
     FITTING = true; render(); FITTING = false;
     setTimeout(fitScreen, 0);
     return;
@@ -3133,13 +3177,24 @@ function fitScreen(){
     : 0;
   /* التوسيع صفٌّ واحد في كل جولة لا قفزة: القفزة كانت تتجاوز الحدّ
      فتحتاج تضييقاً، فتستنفد الجولات وتنتهي الصفحة فائضة. */
-  if (isNat && !FIT_GREW && spare >= rowH * 1.05 &&
-      GRID_SHOWN < GRID_TOTAL && FIT_PASS < 4){
+  /* التوسيع كان لشبكة الجنسيات وحدها، فكانت شبكات الأشخاص تُضيَّق ولا
+     تُستدرك: إن أفرط التضييق مرّةً بقي اللوح بطاقتين ونصفُ الشاشة فارغ
+     — وهو ما وقع في صفحة مكاتب الجاليات، ستٌّ وأربعون في ثلاث وعشرين
+     صفحة. وعلامةُ «بقي ما يُعرض» في الشبكات GRID_SHOWN، وفي القوائم
+     PAGES التي يكتبها listBlock: إن زادت الصفحات على واحدة فثمّ بقيّة. */
+  const more = isNat ? (GRID_SHOWN < GRID_TOTAL) : morePages();
+  if (!FIT_GREW && spare >= rowH * 1.05 && more && FIT_PASS < 6){
     FIT_PASS++;
     FIT_ADJ -= cols;
     FITTING = true; render(); FITTING = false;
     setTimeout(fitScreen, 0);
   }
+}
+
+/* PAGES يُعلَن بـ let بعد هذا الموضع في الملف، وtypeof لا يعصم من منطقة
+   الحظر بل يرمي. والدالة مرفوعة، وtry يعصم، فلا تنكسر لو نُقل التعريف. */
+function morePages(){
+  try { return PAGES > 1; } catch (e) { return false; }
 }
 
 /* تصغير اللوح بقدر الفائض: يُستعمل لصفحات النصّ ولكل شاشة عجز الترقيم عنها */
@@ -3505,6 +3560,16 @@ function headMeta(){
   el.textContent = "";        /* نُقل لا نُسخ، فلا يظهر رقمان */
   return '<span class="lmeta">' + s + '</span>';
 }
+
+
+/* اللمعة عند اللمس. تُنزع بعد انقضائها فتُعاد في اللمسة التالية —
+   ولولا النزع لبقي الصنف فلا تنطلق الحركة ثانيةً. */
+addEventListener("pointerdown", e => {
+  const c = e.target.closest(".way,.cell");
+  if(!c || c.classList.contains("tap")) return;
+  c.classList.add("tap");
+  setTimeout(() => c.classList.remove("tap"), 620);
+}, {passive: true});
 
 /* ══════════ صفحة الجهة ══════════ */
 function orgCount(o){
