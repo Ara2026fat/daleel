@@ -1542,7 +1542,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-bad016a8ca";
-const BUILD_ID    = "70bd32c149";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "7be6ee1f9f";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -2922,8 +2922,6 @@ function settingsHTML(){
         '<span class="val">\u203a</span></button>'+
       '<div class="srow"><span><b>'+t.sVer+'</b><span>'+t.cnt(D.length)+'</span></span>'+
         '<span class="val">'+(DATA.v||"—")+'</span></div>'+
-      '<div class="srow"><span><b>'+t.sVerBuilt+'</b></span>'+
-        '<span class="val">'+STAMP.b[ui]+'</span></div>'+
     '</div>'+
     (EDIT?'<div class="card-set"><p class="slab">'+t.sEdit+'</p>'+
       '<div class="segs"><button class="seg" type="button" data-act="add">'+t.sAdd+'</button>'+
@@ -3045,6 +3043,10 @@ function setInfo(){
         '<div><b>'+nats+'</b><span>'+t.stNat+'</span></div>'+
         '<div><b>'+cities+'</b><span>'+t.stCity+'</span></div>'+
       '</div>'+
+      '<div class="set-row" style="margin-top:8px;cursor:default">'+
+        '<span class="ic">'+SET_IC.data+'</span>'+
+        '<span class="tx"><b>'+t.sVerBuilt+'</b><span>'+t.cnt(D.length)+'</span></span>'+
+        '<span class="go">'+STAMP.b[ui]+'</span></div>'+
       /* بصمات الملفات تشخيصٌ للقائمين لا للمستخدم: تظهر مع ?edit فقط */
       (EDIT ?
       '<div class="set-row" style="margin-top:8px;cursor:default">'+
