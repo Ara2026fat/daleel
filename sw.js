@@ -2,7 +2,7 @@
    القشرة: cache-first (فتح فوري وبلا إنترنت)
    البيانات: network-first مع رجوع للمخزن (حتى يصل التحديث)
    الخطوط: cache-first بعد أول تحميل (لا تُجلب من الشبكة ثانيةً) */
-const SHELL = "daleel-shell-bdf6ebb52a";
+const SHELL = "daleel-shell-2b2240ac1f";
 const DATA  = "daleel-data-v1";
 const FONTS = "daleel-fonts-v1";
 const KEEP  = [SHELL, DATA, FONTS];
