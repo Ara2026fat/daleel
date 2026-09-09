@@ -1542,7 +1542,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-bad016a8ca";
-const BUILD_ID    = "7be6ee1f9f";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "dd637d5aa3";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3046,7 +3046,7 @@ function setInfo(){
       '<div class="set-row" style="margin-top:8px;cursor:default">'+
         '<span class="ic">'+SET_IC.data+'</span>'+
         '<span class="tx"><b>'+t.sVerBuilt+'</b><span>'+t.cnt(D.length)+'</span></span>'+
-        '<span class="go">'+STAMP.b[ui]+'</span></div>'+
+        '<span class="go"><bdi>'+STAMP.b[ui]+'</bdi></span></div>'+
       /* بصمات الملفات تشخيصٌ للقائمين لا للمستخدم: تظهر مع ?edit فقط */
       (EDIT ?
       '<div class="set-row" style="margin-top:8px;cursor:default">'+
@@ -3592,7 +3592,7 @@ addEventListener("pointerdown", e => {
   setTimeout(() => c.classList.remove("tap"), 620);
 }, {passive: true});
 
-const STAMP = {"b": {"ar": "9 سبتمبر 2026", "en": "9 Sep 2026"}};
+const STAMP = {"b": {"ar": "٩ سبتمبر ٢٠٢٦", "en": "9 Sep 2026"}};
 
 /* ══════════ صفحة الجهة ══════════ */
 function orgCount(o){
