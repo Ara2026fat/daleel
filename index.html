@@ -1392,14 +1392,25 @@ html[data-theme="ink"]{
   box-shadow:0 1px 2px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.4)}
 
 /* العدد بطلاً — في الجنسيات واللغات وحدهما: هناك المفاضلة بالعدد
-   حقيقية (الهند مئةٌ وتسعة عشر قبل سريلانكا واحدٍ وأربعين) */
-.nat-grid > .cell .cc,.lgrid .cell .cc{position:static;border:0;padding:0;
+   حقيقية (الهند مئةٌ وتسعة عشر قبل سريلانكا واحدٍ وأربعين).
+
+   والاستثناء مكتوبٌ في المُحدِّد نفسه بـ :not(.wide) لا في قاعدةٍ
+   تأتي بعده تنقضه: gridBlock يُخرج كلَّ الشبكات في nat-grid — الجنسيات
+   والمناطق والسنوات جميعاً — فالمناطق تدخل تحت هذا المحدِّد وهي ذات
+   سطرٍ وصفيّ لا يحتمل عدداً كبيراً فوقه. وكان النقض بقاعدةٍ لاحقة
+   متساوية التخصيص، فكفى في الوضع العام وانتقض في استعلام الشاشة
+   الضيّقة — إذ جاء بعده فغلبه، فكبر العدد على المناطق وتداخل مع
+   أسمائها. والاستثناء في المُحدِّد لا يُنقَض بترتيب. */
+.nat-grid > .cell:not(.wide) .cc,.lgrid .cell:not(.wide) .cc{
+  position:static;border:0;padding:0;
   font-size:25px;font-weight:600;line-height:1.1;color:var(--champagne);
   font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:1px}
-.nat-grid > .cell,.lgrid .cell{gap:3px}
-.nat-grid > .cell .cn,.lgrid .cell .cn{font-size:12px;font-weight:500;color:var(--text-2)}
-/* الشبكات ذات السطر الوصفي (المناطق، السنوات) تُبقي العدّاد شارةً:
-   لا مفاضلة بالعدد فيها، والسطر تحت الاسم يزاحمه لو كبر */
+.nat-grid > .cell:not(.wide),.lgrid .cell:not(.wide){gap:3px}
+.nat-grid > .cell:not(.wide) .cn,.lgrid .cell:not(.wide) .cn{
+  font-size:12px;font-weight:500;color:var(--text-2)}
+/* الشبكات ذات السطر الوصفي (المناطق، السنوات): العدّاد شارةٌ في الزاوية
+   كما كان، ومساحةٌ في الحافّة تمنع الاسم من الدخول تحته */
+.cell.wide{padding-inline-end:44px}
 .cell.wide .cc{position:absolute;top:7px;inset-inline-end:8px;font-size:9.5px;
   font-weight:400;color:var(--champagne-dim);border:1px solid var(--edge-lit);
   border-radius:999px;padding:3px 6px;margin:0}
@@ -1416,7 +1427,8 @@ html[data-theme="ink"]{
 }
 @media (max-width:340px){
   .way{padding:17px 5px 14px}.way svg{width:25px;height:25px}
-  .cell{min-height:94px}.nat-grid > .cell .cc,.lgrid .cell .cc{font-size:22px}
+  .cell{min-height:94px}
+  .nat-grid > .cell:not(.wide) .cc,.lgrid .cell:not(.wide) .cc{font-size:22px}
 }
 
 /* احتياطي الخطوط: أول فتح بلا إنترنت يجب أن يُقرأ قبل وصول خطوط الويب */
@@ -1530,7 +1542,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-ebd65ab38c";
-const BUILD_ID    = "434c71ec83";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "bdf6ebb52a";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3540,14 +3552,19 @@ function officesGi(){
 }
 
 /* شبكة الجنسيات — كانت متنَ الرئيسية، فصارت شاشةً قائمة بذاتها.
-   وتُعرض كاملةً بلا ترقيم: تسعٌ وعشرون خليةً تسع الشاشة، وقد خلت لها. */
+   وتُرقَّم بـ gridBlock كما كانت: جُرّبت كاملةً بلا ترقيم فطالت الصفحة
+   امتداداً — تسعٌ وعشرون خليةً بعد أن كبرت البطاقات وكبر عددها لا
+   تسعها شاشةُ جوّال، فيُملّ النزول. والترقيم يجعلها صفحتين أو ثلاثاً. */
 function natsGrid(){
   const NAT = Object.entries(DATA.CO).sort((a, b) => b[1].n - a[1].n);
-  return '<div class="grid nat-grid enter">' + NAT.map(([code, o]) =>
+  /* بلا لفٍّ في div: gridBlock يُخرج المرقِّم وشبكته بنفسه. ولفُّه في
+     شبكةٍ ثانية يجعل شبكته الداخلية خليّةً واحدة في شبكةٍ ثلاثية
+     الأعمدة، فتنضغط الأعمدة وينكسر الاسم حرفاً تحت حرف. */
+  return gridBlock(NAT, ([code, o]) =>
     '<button class="cell" type="button" data-co="' + code + '">' +
       '<span class="cf">' + flagHTML([o.fl]) + '</span>' +
       '<span class="cn">' + o[ui] + '</span>' +
-      '<span class="cc">' + o.n + '</span></button>').join("") + '</div>';
+      '<span class="cc">' + o.n + '</span></button>', "nat", 132);
 }
 
 /* عدّاد النتائج داخل شريط «تحديد»: طرفٌ لهذا وطرفٌ لذاك.
@@ -3606,7 +3623,7 @@ function langsGrid(){
     '<button class="cell" type="button" data-lk="'+k+'">'+
       '<span class="lg">'+esc(o.g||o[ui])+'</span>'+
       '<span class="cn">'+esc(o[ui])+'</span>'+
-      '<span class="cc">'+n+'</span></button>', "nat", 104)+'</div>';
+      '<span class="cc">'+n+'</span></button>', "nat", 132)   /* ارتفاع الخلية بعد العمق والحشو الجديدين */+'</div>';
 }
 
 function langPage(key){
