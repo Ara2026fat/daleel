@@ -1473,33 +1473,58 @@ html[data-theme="ink"]{
 @media (prefers-reduced-motion:reduce){
   .cbox::after{animation:none;opacity:0}.cbox:active{transform:none}}
 
-/* ══ صفحة الإرسال: الأغراض بطاقاتٍ تُقرأ لا أزراراً صغيرة ══ */
-.cpick{display:flex;flex-direction:column;gap:11px;margin-top:4px}
-.cpick button{display:flex;align-items:center;gap:14px;padding:17px 16px;
-  border-radius:20px;cursor:pointer;font-family:inherit;color:inherit;text-align:start;
-  background:linear-gradient(168deg,var(--a2,var(--glass-1)),var(--a3,var(--glass-2)));
+/* ══════ صفحة الإرسال: ورقةٌ تُكتب، لا نموذجٌ يُملأ ══════
+   جُرّبت أوّلاً ثلاثَ بطاقاتٍ عريضة ثم أربعةَ صناديقَ رماديّة تحتها،
+   فطالت الصفحة شاشتين وصارت كأيّ نموذجٍ في أيّ موقع. والفرق أن هذه
+   رسالةٌ تُكتب لا استمارةٌ تُملأ، فبُنيت كالورقة: صفحةٌ واحدة عليها
+   خطوطٌ رفيعة، والحقول سطورٌ عليها لا صناديقُ فيها.
+   والأغراضُ شريطٌ واحد في أعلاها لا ثلاثُ بطاقات: الاختيار بين ثلاثةٍ
+   لا يستحقّ شاشةً كاملة. */
+.cpaper{position:relative;margin-top:4px;padding:20px 18px 18px;border-radius:24px;
+  background:linear-gradient(170deg,rgba(255,255,255,.5),var(--glass-1) 60%,var(--glass-2));
   border:1px solid var(--edge);
-  box-shadow:0 2px 4px rgba(0,0,0,.05),inset 0 1px 0 rgba(255,255,255,.5);
-  transition:border-color .18s ease,transform .14s ease}
-.cpick button:active{transform:translateY(2px)}
-.cpick button[aria-pressed="true"]{border-color:var(--gold,#B0822E);
-  background:linear-gradient(168deg,rgba(176,130,46,.13),rgba(176,130,46,.04))}
-.cpick svg{width:23px;height:23px;fill:none;stroke:var(--gold,#B0822E);
-  stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.cpick b{font-size:14.5px;font-weight:600;display:block}
-.cpick span{font-size:11.5px;color:var(--text-3);display:block;margin-top:2px}
-.cform{margin-top:20px;padding-top:18px;border-top:1px solid var(--edge)}
+  box-shadow:0 3px 6px rgba(0,0,0,.05),0 16px 34px -16px rgba(60,40,10,.3),
+             inset 0 1px 0 rgba(255,255,255,.8)}
+/* خيطٌ ذهبيّ في رأس الورقة */
+.cpaper::before{content:"";position:absolute;top:0;inset-inline:26px;height:2px;
+  border-radius:2px;background:linear-gradient(90deg,transparent,
+  rgba(176,130,46,.7),transparent)}
 
-/* ══ محتوى اللوحة ══ */
-.cfield{margin-bottom:9px}
-.cfield label{display:block;font-size:11.5px;color:var(--text-3);margin-bottom:4px}
-.cfield label i{font-style:normal;color:var(--champagne-dim);font-size:10.5px}
-.cfield input.fin{width:100%}
-.cfield textarea{width:100%;padding:11px 12px;border-radius:13px;
-  border:1px solid var(--edge);background:var(--glass-1);color:var(--text);
-  font-family:inherit;font-size:14px;line-height:1.6;min-height:76px;resize:vertical}
-.cfield textarea:focus{outline:none;border-color:var(--edge-lit)}
-.cnote{font-size:11.5px;color:var(--text-3);line-height:1.85;margin-top:10px;text-align:center}
+/* الأغراض: شريطٌ واحد، والمختار يمتلئ */
+.cseg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:5px;
+  border-radius:16px;background:var(--glass-1);border:1px solid var(--edge);
+  margin-bottom:20px}
+.cseg button{display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:10px 3px 8px;border:0;border-radius:12px;background:none;cursor:pointer;
+  font-family:inherit;font-size:11.5px;font-weight:600;color:var(--text-3);
+  transition:background .2s ease,color .2s ease}
+.cseg svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.cseg button[aria-pressed="true"]{background:linear-gradient(168deg,#C99A3F,#A8752A);
+  color:#FFF8EA;box-shadow:0 2px 6px -1px rgba(120,88,30,.4)}
+.cseg-hint{font-size:12px;color:var(--text-3);text-align:center;margin:-13px 0 18px}
+
+/* الحقول سطورٌ لا صناديق */
+.crow2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cf{margin-bottom:15px}
+.cf label{display:flex;align-items:baseline;gap:6px;font-size:11.5px;
+  color:var(--text-3);margin-bottom:2px}
+.cf label i{font-style:normal;font-size:10px;opacity:.75}
+.cf label i.req{color:var(--gold,#B0822E);opacity:1}
+.cf input,.cf textarea{width:100%;padding:7px 2px;border:0;border-radius:0;
+  border-bottom:1px solid var(--edge);background:none;color:var(--text);
+  font-family:inherit;font-size:15px;line-height:1.7;transition:border-color .2s ease}
+.cf input:focus,.cf textarea:focus{outline:none;border-bottom-color:var(--gold,#B0822E)}
+.cf textarea{min-height:62px;resize:vertical}
+.cf input[inputmode="tel"]{direction:ltr;unicode-bidi:isolate;text-align:start;
+  font-size:17px;letter-spacing:.04em}
+
+.csend{width:100%;margin-top:6px;padding:15px;border-radius:16px;border:0;
+  background:linear-gradient(168deg,#25BE63,#159048);color:#fff;font-family:inherit;
+  font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;
+  gap:9px;cursor:pointer;box-shadow:0 6px 16px -6px rgba(21,144,72,.6)}
+.csend:active{transform:translateY(2px);box-shadow:0 2px 6px -3px rgba(21,144,72,.6)}
+.csend svg{width:19px;height:19px;fill:currentColor}
 .cerr{font-size:12px;color:#C0563C;margin-top:7px;text-align:center;min-height:1em}
 
 /* احتياطي الخطوط: أول فتح بلا إنترنت يجب أن يُقرأ قبل وصول خطوط الويب */
@@ -1613,7 +1638,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-bad016a8ca";
-const BUILD_ID    = "e0bb5302b1";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "ec37b71373";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -2249,7 +2274,7 @@ $("view").addEventListener("click",e=>{
   if(co){ filter=null; page=1; go("#/co/"+co.dataset.co); return; }
   if(e.target.closest(".pacts")) return;   /* الزرّان روابط تعمل بنفسها */
   if(e.target.closest("[data-copen]")){ go("#/send"); return; }
-  const _ck=e.target.closest(".cpick [data-ck]");
+  const _ck=e.target.closest(".cseg [data-ck]");
   if(_ck){ CKIND=+_ck.dataset.ck; render(); return; }
   if(e.target.closest("#cSend")){ contactSend(); return; }
   const oi=e.target.closest("[data-oi]");
@@ -3675,6 +3700,7 @@ addEventListener("pointerdown", e => {
 }, {passive: true});
 
 const C_ICONS = ["<svg viewBox=\"0 0 24 24\"><path d=\"M12 3.6L21 19.4H3L12 3.6z\"/><path d=\"M12 9.6v4.2M12 16.6v.1\"/></svg>", "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"8.6\"/><path d=\"M12 8v8M8 12h8\"/></svg>", "<svg viewBox=\"0 0 24 24\"><path d=\"M20 12a8 8 0 11-2.6-5.9\"/><path d=\"M20.4 4.2v4.4H16\"/></svg>", "<svg viewBox=\"0 0 24 24\"><path d=\"M19 13.5V19a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h5.4\"/><path d=\"M17.4 3.6l3 3L12 15H9v-3l8.4-8.4z\"/></svg>"];
+const SVG_WA_C = "<svg viewBox=\"0 0 24 24\"><path d=\"M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 2a8 8 0 11-4.1 14.9l-.3-.2-2.6.7.7-2.5-.2-.3A8 8 0 0112 4zm-3.3 4.3c-.2 0-.5 0-.7.4-.2.4-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5 0 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2l-.6-.3s-1.4-.7-1.6-.8c-.2 0-.4-.1-.6.2l-.8 1c-.1.2-.3.2-.5.1-.3-.1-1.2-.5-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.2 0-.4.1-.5l.4-.5.3-.5c0-.2 0-.4-.1-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.4z\"/></svg>";
 
 /* ══════════ لوحة التواصل ══════════ */
 let CKIND = 0;                      /* 0 بلاغ · 1 إضافة · 2 تحديث */
@@ -3696,26 +3722,29 @@ function contactPage(){
   const subs  = [t.cS1, t.cS2, t.cS3];
   const whats = [t.cWhat1, t.cWhat2, t.cWhat3];
   const needsNum = CKIND !== 1;
-  const fld = (id, lab, hint, tel, list) =>
-    '<div class="cfield"><label for="' + id + '">' + lab + ' <i>' + hint + '</i></label>' +
-    '<input class="fin" id="' + id + '"' + (tel ? ' inputmode="tel"' : '') +
-    (list ? ' list="' + list + '"' : '') + ' autocomplete="off"></div>';
+  const f = (id, lab, req, opt) =>
+    '<div class="cf"><label for="' + id + '">' + lab +
+      '<i class="' + (req ? "req" : "") + '">' + (req ? t.cReq : t.cOpt) + '</i></label>' +
+      '<input id="' + id + '"' + (opt || "") + ' autocomplete="off"></div>';
 
-  return '<div class="about page-in">' +
-    '<div class="cpick">' + kinds.map((k, i) =>
+  return '<div class="about page-in"><div class="cpaper">' +
+    '<div class="cseg">' + kinds.map((k, i) =>
       '<button type="button" data-ck="' + i + '" aria-pressed="' + (i === CKIND) + '">' +
-      C_ICONS[i] + '<span class="ct"><b>' + k + '</b><span>' + subs[i] +
-      '</span></span></button>').join("") + '</div>' +
-    '<div class="cform">' +
-    fld("cName", t.cName, t.cOpt) +
-    fld("cOrg", t.cOrg, t.cOpt, false, "cOrgList") + orgDatalist() +
-    (needsNum ? fld("cPhone", t.cPhone, t.cReq, true) : "") +
-    '<div class="cfield"><label for="cBody">' + whats[CKIND] +
-      ' <i>' + (needsNum ? t.cOpt : t.cReq) + '</i></label>' +
+      C_ICONS[i] + k + '</button>').join("") + '</div>' +
+    '<p class="cseg-hint">' + subs[CKIND] + '</p>' +
+    '<div class="crow2">' +
+      f("cName", t.cName, false) +
+      f("cOrg", t.cOrg, false, ' list="cOrgList"') +
+    '</div>' + orgDatalist() +
+    (needsNum ? f("cPhone", t.cPhone, true, ' inputmode="tel"') : "") +
+    '<div class="cf"><label for="cBody">' + whats[CKIND] +
+      '<i class="' + (needsNum ? "" : "req") + '">' +
+      (needsNum ? t.cOpt : t.cReq) + '</i></label>' +
       '<textarea id="cBody"></textarea></div>' +
     '<p class="cerr" id="cErr"></p>' +
-    '<button class="sbtn primary" id="cSend">' + t.cSend + '</button>' +
-    '<p class="cnote">' + t.cNote + '</p></div></div>';
+    '<button class="csend" type="button" id="cSend">' + SVG_WA_C + t.cSend + '</button>' +
+    '<p class="cnote">' + t.cNote + '</p>' +
+  '</div></div>';
 }
 
 /* اقتراحاتُ الجهات: datalist لا select — يقترح ولا يحصر.
