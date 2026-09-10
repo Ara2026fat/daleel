@@ -1500,24 +1500,29 @@ html[data-theme="ink"]{
   transition:background .2s ease,color .2s ease}
 .cseg svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;
   stroke-linecap:round;stroke-linejoin:round}
-.cseg button[aria-pressed="true"]{background:linear-gradient(168deg,#C99A3F,#A8752A);
-  color:#FFF8EA;box-shadow:0 2px 6px -1px rgba(120,88,30,.4)}
+/* المختار بخضرة الدليل لا بلونٍ غريب: الهويّة واحدة في كل شاشة */
+.cseg button[aria-pressed="true"]{background:var(--champagne);color:#F4EFE4;
+  box-shadow:0 2px 6px -2px rgba(0,0,0,.35)}
 .cseg-hint{font-size:12px;color:var(--text-3);text-align:center;margin:-13px 0 18px}
 
 /* الحقول سطورٌ لا صناديق */
 .crow2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.cf{margin-bottom:15px}
-.cf label{display:flex;align-items:baseline;gap:6px;font-size:11.5px;
-  color:var(--text-3);margin-bottom:2px}
+.cf{margin-bottom:11px}
+.cf label{display:flex;align-items:baseline;gap:6px;font-size:11px;
+  color:var(--text-3);margin-bottom:4px}
 .cf label i{font-style:normal;font-size:10px;opacity:.75}
 .cf label i.req{color:var(--gold,#B0822E);opacity:1}
-.cf input,.cf textarea{width:100%;padding:7px 2px;border:0;border-radius:0;
-  border-bottom:1px solid var(--edge);background:none;color:var(--text);
-  font-family:inherit;font-size:15px;line-height:1.7;transition:border-color .2s ease}
-.cf input:focus,.cf textarea:focus{outline:none;border-bottom-color:var(--gold,#B0822E)}
-.cf textarea{min-height:62px;resize:vertical}
+/* مربّعاتٌ صغيرة لا سطورٌ مفتوحة: السطر لا يُرى حدُّه فلا يُعرف أين
+   يُكتب. والصندوق صغيرٌ محدود الارتفاع فلا يُطيل الصفحة. */
+.cf input,.cf textarea{width:100%;padding:9px 11px;border-radius:11px;
+  border:1px solid var(--edge);background:var(--glass-1);color:var(--text);
+  font-family:inherit;font-size:14px;line-height:1.6;
+  transition:border-color .2s ease,background .2s ease}
+.cf input:focus,.cf textarea:focus{outline:none;border-color:var(--champagne);
+  background:var(--glass-2)}
+.cf textarea{min-height:58px;resize:vertical}
 .cf input[inputmode="tel"]{direction:ltr;unicode-bidi:isolate;text-align:start;
-  font-size:17px;letter-spacing:.04em}
+  font-size:15.5px;letter-spacing:.03em}
 
 .csend{width:100%;margin-top:6px;padding:15px;border-radius:16px;border:0;
   background:linear-gradient(168deg,#25BE63,#159048);color:#fff;font-family:inherit;
@@ -1525,6 +1530,11 @@ html[data-theme="ink"]{
   gap:9px;cursor:pointer;box-shadow:0 6px 16px -6px rgba(21,144,72,.6)}
 .csend:active{transform:translateY(2px);box-shadow:0 2px 6px -3px rgba(21,144,72,.6)}
 .csend svg{width:19px;height:19px;fill:currentColor}
+/* فسحةٌ في ذيل الورقة: شريط التنقّل السفليّ ثابتٌ فوقها، فبلا هذه
+   يُقصّ سطر التنبيه ولا يُقرأ */
+.cpaper{padding-bottom:16px}
+.cpaper .cnote{margin-bottom:2px}
+.about.page-in:has(.cpaper){padding-bottom:78px}
 .cerr{font-size:12px;color:#C0563C;margin-top:7px;text-align:center;min-height:1em}
 
 /* احتياطي الخطوط: أول فتح بلا إنترنت يجب أن يُقرأ قبل وصول خطوط الويب */
@@ -1638,7 +1648,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-bad016a8ca";
-const BUILD_ID    = "ec37b71373";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "13cd3242b1";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -1813,7 +1823,12 @@ function autoPS(){
 }
 function PS(){ return userPS || autoPS(); }
 Object.defineProperty(window,"PSIZE",{get:PS});
-addEventListener("resize",()=>{ if(!userPS) render(); });
+addEventListener("resize",()=>{
+  if(userPS) return;
+  const _ae=document.activeElement;
+  if(_ae && _ae.matches("input,textarea,select,[contenteditable]")) return;
+  render();
+});
 const EDIT = /[?&]edit\b/.test(location.search);
 const DEL = new Set();
 let onlyOld = false;
