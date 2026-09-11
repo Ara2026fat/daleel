@@ -1683,7 +1683,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "416-263ea84e95";
-const BUILD_ID    = "ef95a4e1bc";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "b754db76d7";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3877,10 +3877,10 @@ async function cardBlob(list){
   await (document.fonts && document.fonts.ready);
   const logo = await cardLogo();
   const F = '"IBM Plex Sans Arabic",system-ui,sans-serif';
-  const pad = 56, head = 252, block = 300, foot = 46, ROW_H = 112;
+  const pad = 56, head = 252, block = 300, foot = 46, ROW_H = 132;
   const rich = list.length <= CARD_RICH;
   const H = head + (rich ? list.length * block
-                          : list.length * ROW_H + 56) + foot;
+                          : list.length * ROW_H + 60) + foot;
   const c = document.createElement("canvas");
   c.width = CARD_W; c.height = H;
   const x = c.getContext("2d");
@@ -3947,7 +3947,7 @@ async function cardBlob(list){
   let y = head;
   if(list.length > CARD_RICH){
     /* ورقةٌ واحدة تضمّ الصفوف: إطارٌ واحد أهدأ من عشرة أُطر */
-    const ph = list.length * ROW_H + 26, bx = pad, bw = CARD_W - pad * 2;
+    const ph = list.length * ROW_H + 30, bx = pad, bw = CARD_W - pad * 2;
     x.save();
     x.shadowColor = "rgba(9,60,52,.20)"; x.shadowBlur = 30; x.shadowOffsetY = 11;
     const pg = x.createLinearGradient(0, y, 0, y + ph);
@@ -3963,25 +3963,29 @@ async function cardBlob(list){
     x.beginPath(); x.roundRect(bx + 3, y + 3, bw - 6, ph - 6, 25); x.stroke();
 
     const LEFT = 360, ix = bx + bw - 30, tw = bw - LEFT - 56;
-    let ry = y + 13;
+    let ry = y + 15;
     list.forEach((d, i) => {
-      if(i % 2) {                       /* تظليلٌ متناوب يُعين على تتبّع السطر */
+      if(i % 2) {
+        /* تظليلٌ متناوب خفيفٌ جدّاً. وكان يُملأ قبل ضبط لونه فيأخذ لونَ
+           ما سبقه — تدرّجَ الذهب — فتخرج صفوفٌ داكنة كالكآبة. فاللون
+           يُضبط أوّلاً ثم يُملأ مرّةً واحدة. */
         x.save();
-        x.beginPath(); x.roundRect(bx + 6, ry, bw - 12, ROW_H, 14); x.fill();
-        x.fillStyle = "rgba(12,76,65,.045)"; x.fill(); x.restore();
+        x.fillStyle = "rgba(12,76,65,.04)";
+        x.beginPath(); x.roundRect(bx + 8, ry, bw - 16, ROW_H, 14); x.fill();
+        x.restore();
       }
-      x.fillStyle = "#101F1A"; x.font = "600 33px " + F;
-      x.fillText(cardCut(x, nameOf(d), tw), ix, ry + 46);
-      x.fillStyle = "#1F4A40"; x.font = "500 23px " + F;
-      x.fillText(cardLangs(x, d, tw), ix, ry + 84);
+      x.fillStyle = "#101F1A"; x.font = "600 38px " + F;
+      x.fillText(cardCut(x, nameOf(d), tw), ix, ry + 52);
+      x.fillStyle = "#1F4A40"; x.font = "500 26px " + F;
+      x.fillText(cardLangs(x, d, tw), ix, ry + 96);
       x.save(); x.direction = "ltr"; x.textAlign = "left";
       x.fillStyle = GRN;
-      let ps = 38;
+      let ps = 43;
       x.font = "600 " + ps + "px " + F;
-      while(ps > 26 && x.measureText(fmt(d.p)).width > LEFT - 70){
+      while(ps > 30 && x.measureText(fmt(d.p)).width > LEFT - 70){
         ps -= 2; x.font = "600 " + ps + "px " + F;
       }
-      x.fillText(fmt(d.p), bx + 34, ry + 64);
+      x.fillText(fmt(d.p), bx + 34, ry + 76);
       x.restore();
       if(i < list.length - 1){
         x.strokeStyle = "rgba(12,76,65,.12)"; x.lineWidth = 1.5;
