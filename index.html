@@ -1683,7 +1683,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "416-263ea84e95";
-const BUILD_ID    = "2940da1c3e";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "ef95a4e1bc";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3762,8 +3762,8 @@ function chipFlag(d){
   const all = [...new Set(d.l.flatMap(k => (DATA.L[k] || {}).fl || []))];
   if(!all.length) return "";
   let want = null;
-  /* الترشيح بلغة، ثم البحث بنصّها: كلاهما «طلب» */
-  if(filter && filter.k === "lang" && d.l.includes(filter.v)) want = filter.v;
+  /* filter مفتاحُ لغةٍ مجرَّد لا كائن — تُقرأ قيمتُه كما هي */
+  if(filter && d.l.includes(filter)) want = filter;
   if(!want && q && q.trim()){
     const n = norm(q);
     want = d.l.find(k => {
@@ -3824,7 +3824,7 @@ function fitTitle(){
 
 
 /* ══════════ البطاقة المصوَّرة ══════════ */
-const CARD_W = 1080, CARD_MAX = 4;
+const CARD_W = 1080, CARD_RICH = 4, CARD_MAX = 20;
 let _logoImg = null;
 
 function cardLogo(){
@@ -3877,8 +3877,10 @@ async function cardBlob(list){
   await (document.fonts && document.fonts.ready);
   const logo = await cardLogo();
   const F = '"IBM Plex Sans Arabic",system-ui,sans-serif';
-  const pad = 56, head = 252, block = 300, foot = 46;
-  const H = head + list.length * block + foot;
+  const pad = 56, head = 252, block = 300, foot = 46, ROW_H = 112;
+  const rich = list.length <= CARD_RICH;
+  const H = head + (rich ? list.length * block
+                          : list.length * ROW_H + 56) + foot;
   const c = document.createElement("canvas");
   c.width = CARD_W; c.height = H;
   const x = c.getContext("2d");
@@ -3933,10 +3935,63 @@ async function cardBlob(list){
   x.fillStyle = "#12261F"; x.font = "600 42px " + F;
   x.fillText("دليل أرقام دعاة الإسلام", hx + hw - 180, hy + 62);
   x.fillStyle = "#3F6258"; x.font = "500 25px " + F;
-  x.fillText("تواصل مع داعيةٍ بلغتك", hx + hw - 180, hy + 102);
+  /* في القائمة يُذكر موضوعها: اللغة المرشَّحة وعدد من فيها */
+  let sub = "تواصل مع داعيةٍ بلغتك";
+  if(!rich){
+    const ln = (filter && DATA.L[filter]) ? DATA.L[filter].ar : "";
+    sub = (ln ? ln + " · " : "") + list.length + " داعية";
+  }
+  x.fillText(sub, hx + hw - 180, hy + 102);
 
-  /* ــ بطاقات الدعاة ــ */
+  /* ــ الأسماء: لوحٌ واسع للقليل، وصفوفٌ ضيّقة للكثير ــ */
   let y = head;
+  if(list.length > CARD_RICH){
+    /* ورقةٌ واحدة تضمّ الصفوف: إطارٌ واحد أهدأ من عشرة أُطر */
+    const ph = list.length * ROW_H + 26, bx = pad, bw = CARD_W - pad * 2;
+    x.save();
+    x.shadowColor = "rgba(9,60,52,.20)"; x.shadowBlur = 30; x.shadowOffsetY = 11;
+    const pg = x.createLinearGradient(0, y, 0, y + ph);
+    pg.addColorStop(0, "#FFFFFF"); pg.addColorStop(1, "#F3F0E5");
+    x.fillStyle = pg;
+    x.beginPath(); x.roundRect(bx, y, bw, ph, 28); x.fill();
+    x.restore();
+    const gs = x.createLinearGradient(bx, y, bx + bw, y + ph);
+    gs.addColorStop(0, GOLD_L); gs.addColorStop(.5, GOLD); gs.addColorStop(1, GOLD_L);
+    x.strokeStyle = gs; x.lineWidth = 3;
+    x.beginPath(); x.roundRect(bx, y, bw, ph, 28); x.stroke();
+    x.strokeStyle = "rgba(255,255,255,.9)"; x.lineWidth = 2;
+    x.beginPath(); x.roundRect(bx + 3, y + 3, bw - 6, ph - 6, 25); x.stroke();
+
+    const LEFT = 360, ix = bx + bw - 30, tw = bw - LEFT - 56;
+    let ry = y + 13;
+    list.forEach((d, i) => {
+      if(i % 2) {                       /* تظليلٌ متناوب يُعين على تتبّع السطر */
+        x.save();
+        x.beginPath(); x.roundRect(bx + 6, ry, bw - 12, ROW_H, 14); x.fill();
+        x.fillStyle = "rgba(12,76,65,.045)"; x.fill(); x.restore();
+      }
+      x.fillStyle = "#101F1A"; x.font = "600 33px " + F;
+      x.fillText(cardCut(x, nameOf(d), tw), ix, ry + 46);
+      x.fillStyle = "#1F4A40"; x.font = "500 23px " + F;
+      x.fillText(cardLangs(x, d, tw), ix, ry + 84);
+      x.save(); x.direction = "ltr"; x.textAlign = "left";
+      x.fillStyle = GRN;
+      let ps = 38;
+      x.font = "600 " + ps + "px " + F;
+      while(ps > 26 && x.measureText(fmt(d.p)).width > LEFT - 70){
+        ps -= 2; x.font = "600 " + ps + "px " + F;
+      }
+      x.fillText(fmt(d.p), bx + 34, ry + 64);
+      x.restore();
+      if(i < list.length - 1){
+        x.strokeStyle = "rgba(12,76,65,.12)"; x.lineWidth = 1.5;
+        x.beginPath(); x.moveTo(bx + 34, ry + ROW_H); x.lineTo(bx + bw - 34, ry + ROW_H);
+        x.stroke();
+      }
+      ry += ROW_H;
+    });
+    y += ph + 30;
+  } else
   for(const d of list){
     const bh = block - 30, bx = pad, bw = CARD_W - pad * 2;
     x.save();
