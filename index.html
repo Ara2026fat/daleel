@@ -1440,32 +1440,48 @@ html[data-theme="ink"]{
 .res-sec.sites-sec{background:none;border:0;padding:0;margin-top:11px}
 .orb-wrap{margin-top:10px}
 .orbit{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:1/1.02;
-  background:radial-gradient(74% 64% at 50% 42%,#12345E,#0A1F3C 56%,#050E1E);
+  background:radial-gradient(76% 66% at 50% 40%,#1E5A9E,#123F73 48%,#0A2547);
   box-shadow:0 14px 28px -18px rgba(0,0,0,.6)}
-.orbit .rings{position:absolute;inset:0;pointer-events:none}
-.orbit .rings i{position:absolute;border-radius:50%;left:50%;top:47%;
-  transform:translate(-50%,-50%);border:1px solid rgba(231,200,154,.17)}
+/* خطوط المدار حُذفت: زخرفةٌ تشوّش على الدوائر ولا تدلّ على شيء.
+   والعمق يأتي من الدوائر نفسها لا من شبكةٍ خلفها. */
 
 /* العقدة على المدار: كحلية داكنة بحافة ذهبية */
-.onode{position:absolute;left:50%;top:47%;width:72px;height:72px;
-  margin:-36px 0 0 -36px;border-radius:50%;display:grid;place-items:center;
+.onode{position:absolute;left:50%;top:46%;width:80px;height:80px;
+  margin:-40px 0 0 -40px;border-radius:50%;display:grid;place-items:center;
   text-align:center;padding:6px;cursor:pointer;overflow:hidden;isolation:isolate;
-  background:radial-gradient(72% 60% at 34% 24%,#1B4270,#0A1E3A);
-  border:1px solid rgba(231,200,154,.30);
-  box-shadow:0 6px 14px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.10);
+  /* كرةٌ لا قرص: ضوءٌ علويّ، وانعكاسٌ سفليّ، وحافةٌ مضيئة،
+     وظلٌّ قريب وبعيد — فتبدو ناتئة عن اللوحة. */
+  background:
+    radial-gradient(38% 32% at 33% 20%,rgba(255,255,255,.55),transparent 62%),
+    radial-gradient(60% 46% at 52% 104%,rgba(120,200,255,.26),transparent 68%),
+    radial-gradient(76% 68% at 36% 26%,#2E6FB5,#143A6B 62%,#0B2246);
+  border:1px solid rgba(231,200,154,.34);
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.32),
+    inset 0 -3px 6px rgba(0,0,0,.42),
+    0 3px 6px rgba(0,0,0,.34),
+    0 12px 22px -10px rgba(0,0,0,.66);
   transition:transform .5s cubic-bezier(.45,0,.2,1),
     width .5s cubic-bezier(.45,0,.2,1),height .5s cubic-bezier(.45,0,.2,1),
     margin .5s cubic-bezier(.45,0,.2,1),background .4s ease,border-color .4s ease}
-.onode > .nm{font-size:9px;font-weight:600;line-height:1.35;color:#EAF0F8;
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* الاسم يتنفّس: أربع كلمات كانت تُحشر في ثلاثة أسطر ضيّقة */
+.onode > .nm{font-size:9px;font-weight:600;line-height:1.5;color:#EAF0F8;
+  padding:0 3px;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .onode .mt,.onode .dm{display:none}
 
 /* المركز: كريميّ فاتح — تباينٌ صريح */
-.onode.core{width:136px;height:136px;margin:-68px 0 0 -68px;z-index:5;cursor:pointer;
-  background:radial-gradient(70% 62% at 34% 24%,#FFFDF6,#EFE3CC 60%,#E2D3B6);
-  border:1px solid rgba(255,255,255,.9);
-  box-shadow:0 0 40px rgba(231,200,154,.32),0 12px 26px -14px rgba(0,0,0,.8),
-    inset 0 2px 0 rgba(255,255,255,.95)}
+.onode.core{width:142px;height:142px;margin:-71px 0 0 -71px;z-index:5;cursor:pointer;
+  /* كريميّ أغمق قليلاً فلا يبهر، وكرويّ كأخواته */
+  background:
+    radial-gradient(36% 30% at 32% 18%,rgba(255,255,255,.92),transparent 64%),
+    radial-gradient(72% 64% at 36% 26%,#F2E6CE,#DDCBA8 58%,#C9B489);
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,.9),
+    inset 0 -4px 8px rgba(120,95,50,.30),
+    0 0 44px rgba(231,200,154,.30),
+    0 14px 28px -12px rgba(0,0,0,.72)}
 /* الشارة تُقصّ على حافة الدائرة الكبيرة: تُخفى في المركز
    لأن التفصيل ظاهرٌ هناك أصلاً */
 .onode.core .nb{display:none}
@@ -1474,9 +1490,13 @@ html[data-theme="ink"]{
 .onode.core .dm{display:block;font-size:8.5px;color:#6B5A3E;margin-top:6px;
   direction:ltr;unicode-bidi:isolate;max-width:108px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.onode .nb{position:absolute;top:5px;inset-inline-end:6px;font-style:normal;
-  font-size:7.5px;font-weight:600;padding:0 5px;border-radius:999px;
-  color:#0A1E3A;background:linear-gradient(150deg,#FFE0A8,#E7C89A)}
+/* الشارة عند الحافة تُقصّ بانحناء الكرة وتقطع ضوءها: تُنقل إلى
+   داخلها فوق الاسم، وتصير جزءاً من تكوين الكرة لا نتوءاً عليها. */
+.onode .nb{position:static;display:block;justify-self:center;font-style:normal;
+  font-size:7px;font-weight:600;padding:0 6px;border-radius:999px;margin-bottom:3px;
+  color:#0A1E3A;background:linear-gradient(150deg,#FFE0A8,#E7C89A);
+  box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.onode{grid-auto-rows:min-content;align-content:center}
 .orb-hint{position:absolute;inset-inline:0;bottom:8px;text-align:center;
   font-size:9.5px;color:rgba(231,200,154,.6)}
 
@@ -1484,10 +1504,22 @@ html[data-theme="ink"]{
 .orb-rest{display:flex;gap:7px;margin-top:8px}
 .orb-rest a{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;
   padding:9px 10px;border-radius:14px;text-decoration:none;position:relative;
-  background:linear-gradient(160deg,#12345E,#0A1F3C);
-  border:1px solid rgba(231,200,154,.22);
-  box-shadow:0 6px 14px -10px rgba(0,0,0,.6);
+  background:linear-gradient(160deg,#1A4E8A,#0E2E58);
+  border:1px solid rgba(255,255,255,.20);
+  backdrop-filter:blur(7px) saturate(150%);
+  -webkit-backdrop-filter:blur(7px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -2px 5px rgba(0,0,0,.28),
+    0 8px 16px -10px rgba(0,0,0,.6);
+  overflow:hidden;isolation:isolate;
   transition:transform .2s cubic-bezier(.3,0,.2,1)}
+/* لمعانٌ يمرّ عند اللمس */
+.orb-rest a::after{content:"";position:absolute;inset:0;z-index:2;
+  pointer-events:none;border-radius:inherit;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.5) 50%,
+    transparent 62%);
+  transform:translateX(-130%);transition:transform .6s cubic-bezier(.3,0,.2,1)}
+.orb-rest a:active::after{transform:translateX(130%)}
 .orb-rest a:active{transform:translateY(1px) scale(.985)}
 /* الشارة في البطاقة السفلية ورثت تنسيقاً أزرق من قاعدة أخرى */
 .orb-rest .nb{position:absolute;top:5px;inset-inline-end:7px;font-style:normal;
@@ -1641,7 +1673,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-21e26032ec";
-const BUILD_ID    = "9dfd473d94";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "f5945c046c";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -2254,11 +2286,13 @@ $("view").addEventListener("click",e=>{
   if(co){ filter=null; page=1; go("#/co/"+co.dataset.co); return; }
   const ob=e.target.closest("[data-orb]");
   if(ob){
+    /* اللمسة الأولى تُقرّب، والثانية تفتح. فتحُ الموقع من اللمسة
+       الأولى يفتح مواقعَ بالخطأ في مدارٍ مزدحم، والاكتفاء بالتقريب
+       يُخفي أن الدائرة رابط. فهذه وسطٌ بينهما. */
     if(ob.classList.contains("core")){
       window.open("https://"+ob.dataset.dom,"_blank","noopener");
       return;
     }
-    /* الملموس ينتقل إلى المركز: الحركة نفسها تشرح ما حدث */
     ORB_CORE=+ob.dataset.orb; buzz(7); render();
     requestAnimationFrame(orbLayout);
     return;
@@ -3649,8 +3683,7 @@ function orbLayout(){
 function orbitHTML(list, t){
   const ring = list.slice(0, 8), rest = list.slice(8);
   if (ORB_CORE >= ring.length) ORB_CORE = 0;
-  const rings = [44, 62, 80].map(w =>
-    '<i style="width:' + w + '%;height:' + w + '%"></i>').join("");
+
   const nodes = ring.map((x, i) => {
     const p = siteParts(ui === "ar" ? x[1] : x[2]);
     return '<span class="onode' + (i === ORB_CORE ? " core" : "") +
@@ -3666,8 +3699,8 @@ function orbitHTML(list, t){
       (x[3] ? '<i class="nb">' + t.badgeNew + '</i>' : "") +
       '<b>' + esc(p.name) + '</b><span>' + esc(x[0]) + '</span></a>';
   }).join("") + '</div>' : "";
-  return '<div class="orb-wrap"><div class="orbit"><div class="rings">' + rings +
-    '</div>' + nodes + '<span class="orb-hint">' + t.orbHint +
+  return '<div class="orb-wrap"><div class="orbit">' + nodes +
+    '<span class="orb-hint">' + t.orbHint +
     '</span></div>' + more + '</div>';
 }
 
