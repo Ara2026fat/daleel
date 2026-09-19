@@ -1144,44 +1144,37 @@ html[dir=rtl] .brand h1{
 
 .ocard{display:block;text-align:start;background:var(--glass-1);
   border:1px solid var(--edge);border-radius:var(--r-md);
-  padding:11px 13px 5px;box-shadow:var(--lift-1)}
+  padding:9px 11px 3px;box-shadow:var(--lift-1)}
 /* العنوان سطران على الأكثر: الالتفاف ثلاثة أسطر في عمودٍ ضيّق
    يرفع البطاقة إلى ١٤٧ بكسل فيقلّ ما يسعه الصفّ */
 .ocard > b{display:block;font-size:.76em;font-weight:600;color:var(--text);
   line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;
   -webkit-box-orient:vertical;overflow:hidden}
-/* الجهة ذات الرقم الواحد: صفٌّ واحد */
-.ocard.one{display:flex;flex-direction:column;gap:5px;padding:10px 11px;
-  text-decoration:none;color:inherit;transition:transform .14s ease}
-.ocard.one:active{transform:scale(.985)}
-.ocard.one > b{font-size:.74em;line-height:1.4;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ocard.one .ic2{display:none}
-/* الرقم يُقلب في السياق العربي ما لم يُعزل، فيُقرأ «5030 884 055» */
-.ocard.one .num2{font-size:.8em;align-self:flex-start;
-  direction:ltr;unicode-bidi:isolate}
-.onums{margin-top:7px;border-top:1px solid var(--edge);padding-top:2px}
-.onum-row{display:flex;align-items:center;gap:7px;padding:5px 0;
+.onums{margin-top:5px;border-top:1px solid var(--edge);padding-top:1px}
+.onum-row{display:flex;align-items:center;gap:7px;padding:4px 0;
   border-bottom:1px solid var(--edge);text-decoration:none;color:inherit;
   transition:transform .14s ease}
 .onum-row:last-child{border-bottom:0}
 .onum-row:active{transform:scale(.985)}
 .onum-row .ic2{flex:0 0 auto;width:24px;height:24px;border-radius:8px;display:grid;
   place-items:center;background:var(--glass-2);border:1px solid var(--edge)}
-.onum-row .ic2 svg{width:13px;height:13px;fill:var(--jade)}
+.onum-row .ic2 svg{width:13px;height:13px;fill:var(--champagne)}
 /* التسمية تُقصّ إلى حرفٍ واحد في العمود الضيّق فتصير تشويشاً:
    تُخفى دون ١٦٠ بكسل ويبقى الرقم وحده. */
 .onum-row .lbl{flex:1;min-width:0;font-size:.66em;color:var(--text-2);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @container (max-width:170px){ .onum-row .lbl{display:none} }
 .ocard{container-type:inline-size}
-.onum-row .num2{font-size:.82em;font-weight:600;color:var(--jade);
+/* اللون الأساسي للوحة لا الثانوي: --jade أزرق في اللوحة الورقية
+   فيصطدم بالذهبي حوله، و--champagne هو لون التطبيق نفسه. */
+.onum-row .num2{font-size:.82em;font-weight:600;color:var(--champagne);
   white-space:nowrap;font-variant-numeric:tabular-nums;
   direction:ltr;unicode-bidi:isolate}
 @media (max-height:700px){
-  .ocard{padding:9px 11px 3px}
-  .onum-row{padding:5px 0}
-  .ocard > b{font-size:.78em}
+  .ocard{padding:7px 9px 2px}
+  .onum-row{padding:3px 0}
+  .ocard > b{font-size:.74em;line-height:1.35}
+  .onum-row .ic2{width:23px;height:23px}
 }
 
 /* ══════════════ عمق ثلاثي الأبعاد ══════════════ */
@@ -1495,7 +1488,7 @@ const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
 const BUILT_V     = "415-21e26032ec";
-const BUILD_ID    = "18e2768f3d";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILD_ID    = "628acdd0fd";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3264,16 +3257,10 @@ const svgTel = '<svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.
 
 function orgCard(g){
   const t = T[ui];
-  /* الجهة ذات الرقم الواحد صفٌّ مضغوط: اسمٌ ورقم.
-     وأكثر الجهات كذلك (٧٠ من ٧٦)، فإفرادُ صفٍّ للرقم يضاعف
-     ارتفاع البطاقة بلا فائدة ويُثقل التصفّح. */
-  if (g.nums.length === 1){
-    const n = g.nums[0];
-    return '<a class="ocard one" href="tel:' + tel(n.p) + '">' +
-      '<span class="ic2">' + svgTel + '</span>' +
-      '<b title="' + esc(g.name) + '">' + esc(g.name) + '</b>' +
-      '<span class="num2">' + fmt(n.p) + '</span></a>';
-  }
+  /* كل رقم يُعرض بنفس الشكل: أيقونة اتصال ولون واحد.
+     كان ذو الرقم الواحد يُعرض نصّاً أسود بلا أيقونة، وذو الرقمين
+     أزرق بأيقونة — فيصير في الشاشة الواحدة تباينٌ بلا معنى،
+     وكلها أرقام تُتصل. */
   const rows = g.nums.map(n =>
     '<a class="onum-row" href="tel:' + tel(n.p) + '">' +
       '<span class="ic2">' + svgTel + '</span>' +
