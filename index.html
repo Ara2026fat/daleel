@@ -984,6 +984,14 @@ html[dir=rtl] .brand h1{
   .set-row .tx span{font-size:10.5px}
   .thm-row{padding:8px 10px}
   .thm-pv{width:60px;height:40px}
+  /* قائمة المواقع صارت تسعة، والوصف الإنجليزي أطول فيلتفّ سطرين.
+     تُضغط في كل الجوالات لا في القصيرة وحدها. */
+  .res-item{padding:6px 0}
+  .res-item b{font-size:12.5px;line-height:1.4}
+  .res-item span{font-size:10.5px;line-height:1.35;
+    display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .res-sec{margin-top:9px;padding:11px}
+  .res-sec h3{font-size:12.5px;margin-bottom:5px}
   .set-stats div{padding:11px 4px}
   .set-stats b{font-size:16px}
   .set-h{margin-bottom:7px}
@@ -1040,7 +1048,7 @@ html[dir=rtl] .brand h1{
   .ab-sec{margin-top:10px;padding:13px 14px}
   .ab-sec p,.ab-sec li{font-size:12.5px;line-height:1.75}
   .res-sec{margin-top:10px;padding:12px}
-  .res-item{padding:9px 0}
+  /* قائمة المواقع نمت إلى تسعة، فتُضغط في الشاشات القصيرة */
   .res-item b{font-size:12.5px}
   .res-item span{font-size:11px}
   .adm-card{margin-top:9px;padding:12px}
@@ -1261,6 +1269,11 @@ html[data-theme="ink"]{
   .about .ab-stats b{font-size:17px}
 }
 
+.sp-steps{margin-top:10px;padding-top:9px;gap:12px}
+.sp-steps .stp{width:40px;height:34px}
+.sp-steps .stp-mid{min-width:56px}
+.sp-steps .stp-mid b{font-size:12px}
+
 /* ══════════════ خاتمة «عن الدليل» ══════════════ */
 .end-call{margin-top:13px;padding:18px 16px;border-radius:20px;text-align:center;
   background:linear-gradient(160deg,var(--a1),var(--a2));
@@ -1450,8 +1463,8 @@ html[data-theme="ink"]{
 const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
-const BUILT_V     = "415-2f5e7cc5cb";
-const BUILD_ID    = "b8fe846eee";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILT_V     = "415-2296b9a363";
+const BUILD_ID    = "9189c1b649";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -3248,6 +3261,8 @@ function buzz(ms){
 /* اتجاه انتقال اللوح يتبع اتجاه التبويب المختار */
 let PANE_DIR = 1;
 document.addEventListener("click", e=>{
+  const spg=e.target.closest("[data-sp]");
+  if(spg){ const v=+spg.dataset.sp; if(v>=1){ sitePage=v; render(); } return; }
   const sp=e.target.closest("[data-step]");
   if(sp){
     const [k,v]=sp.dataset.step.split(":");
@@ -3274,6 +3289,8 @@ document.addEventListener("click", e=>{
 }, true);
 
 /* ══════════ فضل الدعوة ══════════ */
+let sitePage = 1;
+
 const _aya=(txt,src,cls)=>'<div class="aya'+(cls||"")+'"><q>'+txt+'</q>'+
   '<cite>'+src+'</cite></div>';
 function pageHero(title, lede){
@@ -3358,11 +3375,27 @@ function resHTML(){
       '<span style="flex:1"><b>'+esc(ui==="ar"?x[1]:x[2])+'</b>'+
       (x[3]?'<span>'+esc(x[3])+'</span>':'')+'</span>'+
       '<span class="rn">'+fmt(x[0])+'</span></a>').join("");
-  const si=(R.sites||[]).map(x=>
+  /* المواقع صارت أحد عشر فتفيض الشاشة الصغيرة: تُقسم صفحتين
+     بسهمين، ولا تُضغط أكثر مما تحتمله القراءة. */
+  const SITE_PER = 6;
+  const allSites = R.sites || [];
+  const sPages = Math.max(1, Math.ceil(allSites.length / SITE_PER));
+  if (sitePage > sPages) sitePage = sPages;
+  const shownSites = allSites.slice((sitePage-1)*SITE_PER, sitePage*SITE_PER);
+  const si=shownSites.map(x=>
     '<a class="res-item" href="https://'+x[0]+'" target="_blank" rel="noopener">'+
       '<span style="flex:1"><b>'+esc(ui==="ar"?x[1]:x[2])+'</b>'+
       '<span dir="ltr">'+esc(x[0])+'</span></span>'+
-      '<span class="rn">\u2197</span></a>').join("");
+      '<span class="rn">\u2197</span></a>').join("")
+    + (sPages>1 ? '<div class="steps sp-steps">'+
+        '<button class="stp" type="button" data-sp="'+(sitePage-1)+'"'+
+          (sitePage===1?' disabled':'')+'>'+
+          '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>'+
+        '<span class="stp-mid"><b>'+sitePage+' / '+sPages+'</b></span>'+
+        '<button class="stp" type="button" data-sp="'+(sitePage+1)+'"'+
+          (sitePage===sPages?' disabled':'')+'>'+
+          '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>'+
+      '</div>' : "");
   const nm=(R.named||[]).map(x=>'<span>'+esc(ui==="ar"?x[0]:x[1])+'</span>').join("");
   const panes=[
     ph?'<section class="res-sec"><h3>'+t.resPhones2+'</h3>'+ph+'</section>':"",
