@@ -1504,8 +1504,10 @@ html[data-theme="ink"]{
   font-size:9.5px;color:rgba(231,200,154,.6)}
 
 /* الحلقة السفلية: البقية بلا صفحةٍ ثانية */
-.orb-rest{display:flex;gap:7px;margin-top:8px}
-.orb-rest a{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;
+/* شبكة لا صفّ: سبع بطاقات في صفٍّ واحد تنسحق إلى ٥٠ بكسل
+   فتصير الأسماء «خادم الم…» و«كتاب حـ…» ولا تُقرأ. */
+.orb-rest{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.orb-rest a{min-width:0;display:flex;flex-direction:column;gap:2px;
   padding:9px 10px;border-radius:14px;text-decoration:none;position:relative;
   background:linear-gradient(160deg,#1A4E8A,#0E2E58);
   border:1px solid rgba(255,255,255,.20);
@@ -1529,7 +1531,7 @@ html[data-theme="ink"]{
   font-size:7.5px;font-weight:600;padding:0 5px;border-radius:999px;
   color:#0A1E3A;background:linear-gradient(150deg,#FFE0A8,#E7C89A)}
 .orb-rest a{padding-top:16px}
-.orb-rest b{font-size:9.5px;font-weight:600;color:#EAF0F8;line-height:1.4;
+.orb-rest b{font-size:9px;font-weight:600;color:#EAF0F8;line-height:1.35;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .orb-rest span{font-size:8px;color:rgba(231,200,154,.7);direction:ltr;
   unicode-bidi:isolate;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1542,26 +1544,55 @@ html[data-theme="ink"]{
   .onode.core > .nm{font-size:11px}
   .onode.core .mt{font-size:9px}
   .onode.core .dm{font-size:8px;margin-top:4px}
-  .orb-rest{gap:6px;margin-top:6px}
-  .orb-rest a{padding:14px 8px 6px}
+  .orb-rest{gap:5px;margin-top:6px}
+  .orb-rest a{padding:13px 6px 5px}
   .orb-rest b{font-size:9px}
   .orb-hint{font-size:9px;bottom:6px}
 }
-/* الأصغر: المدار يضيق أكثر لئلا يفيض */
-@media (max-height:670px){
-  .orbit{aspect-ratio:1/0.86}
-  .onode{width:56px;height:56px;margin:-28px 0 0 -28px}
-  .onode > .nm{font-size:7.5px}
-  .onode.core{width:102px;height:102px;margin:-51px 0 0 -51px}
-  .onode.core > .nm{font-size:10px}
+/* من ٧٩٠ فأقلّ: صفّان من البطاقات أسفل المدار يضيفان ارتفاعاً،
+   فيلزم ضغطٌ أشدّ. كان الحدّ ٦٧٠ فبقي ما بينهما يفيض. */
+@media (max-height:845px){
+  .orbit{aspect-ratio:1/0.72}
+  .onode{width:52px;height:52px;margin:-26px 0 0 -26px}
+  .onode > .nm{font-size:7px;line-height:1.3}
+  .onode.core{width:94px;height:94px;margin:-47px 0 0 -47px}
+  .onode.core > .nm{font-size:9.5px}
+  .onode.core .mt{font-size:8px;margin-top:1px}
+  .onode.core .dm{font-size:7.5px;margin-top:3px}
+  .orb-hint{font-size:8.5px;bottom:4px}
+  .orb-rest{gap:4px;margin-top:5px}
+  .orb-rest a{padding:11px 5px 4px}
+  .orb-rest b{font-size:8px;line-height:1.3}
+  .orb-rest span{font-size:7px}
+  .orb-rest .nb{font-size:6.5px;top:3px;inset-inline-end:4px}
 }
+
+/* دون ٦٦٠: أربعة صفوف من البطاقات، والأسماء الإنجليزية أطول.
+   وتأتي بعد قاعدة ٨٤٥ لا قبلها: المتساويتان في الأولوية
+   تفوز فيهما المتأخّرة، فكانت الأوسع تطغى على الأضيق. */
+@media (max-height:660px){
+  .orbit{aspect-ratio:1/0.62}
+  .onode{width:46px;height:46px;margin:-23px 0 0 -23px}
+  .onode > .nm{font-size:6.5px;line-height:1.25}
+  .onode .nb{font-size:6px;padding:0 4px;margin-bottom:1px}
+  .onode.core{width:84px;height:84px;margin:-42px 0 0 -42px}
+  .onode.core > .nm{font-size:8.5px}
+  .onode.core .mt{font-size:7.5px}
+  .onode.core .dm{font-size:7px;margin-top:2px}
+  .orb-hint{display:none}
+  .orb-rest{gap:3px;margin-top:4px}
+  .orb-rest a{padding:10px 4px 3px}
+  .orb-rest b{font-size:7.5px;line-height:1.25}
+  .orb-rest span{font-size:6.5px}
+}
+
 
 /* ══════════════ تبويب القنوات ══════════════ */
 /* ثلاثة أعمدة: الاسم لغةٌ واحدة قصيرة، والعمودان يتركان فراغاً
    ويجعلان الستّ والعشرين تفيض الشاشة. */
-.chgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.chgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
 .chip-ch{position:relative;display:flex;flex-direction:column;align-items:center;
-  gap:4px;text-align:center;padding:8px 5px 7px;border-radius:13px;text-decoration:none;overflow:hidden;
+  gap:6px;text-align:center;padding:13px 8px 12px;border-radius:15px;text-decoration:none;overflow:hidden;
   isolation:isolate;
   background:linear-gradient(158deg,var(--a1),var(--a2) 60%,var(--a3));
   border:1px solid var(--edge);
@@ -1575,19 +1606,29 @@ html[data-theme="ink"]{
     transparent 60%);
   transform:translateX(-130%);transition:transform .55s cubic-bezier(.3,0,.2,1)}
 .chip-ch:active::after{transform:translateX(130%)}
-.chip-ch .tg{flex:0 0 auto;width:21px;height:21px;border-radius:7px;display:grid;
+.chip-ch .tg{flex:0 0 auto;width:34px;height:34px;border-radius:11px;display:grid;
   place-items:center;background:linear-gradient(150deg,#31A6DE,#1D82BA);
   box-shadow:0 2px 5px -2px rgba(0,0,0,.45)}
-.chip-ch .tg svg{width:11px;height:11px;fill:#fff}
+.chip-ch .tg svg{width:18px;height:18px;fill:#fff}
 .chip-ch .tx{width:100%;min-width:0}
 /* الاسم يُلفّ سطرين بدل أن يُقصّ: العمود ٦٨ بكسل وبعض الأسماء أطول */
 .chip-ch b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  font-size:10px;font-weight:600;color:var(--text);
+  font-size:12.5px;font-weight:600;color:var(--text);
   line-height:1.35;overflow:hidden;word-break:break-word}
 /* المعرّف (@islam_2000) يُخفى في العمود الضيّق ويبقى الاسم.
    والانتقاء محدَّد بـ.tx > span: قاعدة .chip-ch span العامة كانت
    تطابق الحاوية .tx نفسها فتُخفي الاسم معها. */
-.chip-ch .tx > span{display:none}
+.chip-ch .tx > span{display:block;font-size:9px;color:var(--text-3);
+  margin-top:2px;direction:ltr;unicode-bidi:isolate;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chpg{display:flex;justify-content:center;gap:6px;margin-top:9px}
+.chpg button{width:32px;height:32px;border-radius:11px;cursor:pointer;
+  font-family:inherit;font-size:12.5px;font-weight:600;color:var(--text-2);
+  background:var(--glass-1);border:1px solid var(--edge);
+  box-shadow:var(--lift-1);transition:transform .14s ease}
+.chpg button:active{transform:scale(.93)}
+.chpg button.on{color:var(--bg);border-color:transparent;
+  background:linear-gradient(150deg,#F2DBB8,var(--champagne))}
 .ch-lead{font-size:11px;color:var(--text-3);line-height:1.8;margin-top:2px}
 @media (max-height:760px){
   .chgrid{gap:5px;margin-top:6px}
@@ -1606,8 +1647,9 @@ html[data-theme="ink"]{
   .chip-ch .tg svg{width:9px;height:9px}
   .ch-lead{font-size:9.5px;line-height:1.6;margin-top:0}
 }
-@media (min-width:620px){ .chgrid{grid-template-columns:repeat(5,1fr)} }
-@media (min-width:1000px){ .chgrid{grid-template-columns:repeat(7,1fr)} }
+/* أربعة أعمدة لا خمسة: الخامس يضيّق البطاقة فتُقصّ الأسماء */
+@media (min-width:620px){ .chgrid{grid-template-columns:repeat(4,1fr)} }
+@media (min-width:1000px){ .chgrid{grid-template-columns:repeat(5,1fr)} }
 
 /* احتياطي الخطوط: أول فتح بلا إنترنت يجب أن يُقرأ قبل وصول خطوط الويب */
 body,input,button,textarea,select{
@@ -1728,8 +1770,8 @@ html[data-theme="ink"]{
 const DALEEL_MODE = "site";
 const DATA_URL    = "daleel-data.json";
 const VERSION_URL = DATA_URL;
-const BUILT_V     = "414-7d17dd551f";
-const BUILD_ID    = "8139138ff4";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
+const BUILT_V     = "414-4deabf9e81";
+const BUILD_ID    = "cb694de880";   /* بصمة الواجهة: يُعرف بها أن الرفع وصل */   /* نسخة البيانات المرافقة لهذا البناء */
 
 /* تُربط في bindData() — كانت const قبل الفصل */
 let DATA=null, L=null, D=null, ORGS=null, COUNT=null, KEYS=[];
@@ -2353,6 +2395,8 @@ $("view").addEventListener("click",e=>{
     requestAnimationFrame(orbLayout);
     return;
   }
+  const chp=e.target.closest("[data-chp]");
+  if(chp){ CH_PAGE=+chp.dataset.chp; buzz(6); render(); return; }
   const lk=e.target.closest("[data-lk]");
   if(lk){ go("#/l/"+lk.dataset.lk); return; }
   const lf=e.target.closest("[data-lang]");
@@ -3319,6 +3363,7 @@ let FIT_PASS = 0;           /* جولات التوسيع، محدودة كي ل�
 let FIT_TIGHT = 0;          /* جولات التضييق: ميزانية مستقلة */
 let FIT_GREW = false;       /* وسّعنا مرة؟ فلا نعود إليه بعد تضييق */
 function resetFit(){
+  CH_PAGE = 1;
   ORB_CORE = 0;
   ORG_PS = 0;
   FIT_ADJ = 0; FIT_PASS = 0; FIT_TIGHT = 0; FIT_GREW = false;
@@ -3768,10 +3813,23 @@ addEventListener("resize", orbLayout);
 /* ══════════ تبويب القنوات ══════════ */
 const svgTg = '<svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13.1 1.4 11.6c-1-.3-1.1-1 .2-1.5l19-7.3c.9-.3 1.6.2 1.3 1.5z"/></svg>';
 
+let CH_PAGE = 1;
+const CH_PER = 10;
+
 function channelsHTML(){
   const t = T[ui];
-  const list = (DATA.RES && DATA.RES.channels) || [];
-  if (!list.length) return "";
+  const all = (DATA.RES && DATA.RES.channels) || [];
+  if (!all.length) return "";
+  /* عشر قنوات في الصفحة: الستّ والعشرون معاً تُصغّر البطاقة إلى
+     حدٍّ لا تُقرأ فيه، والترقيم يُتيح تكبيرها. */
+  const pages = Math.max(1, Math.ceil(all.length / CH_PER));
+  if (CH_PAGE > pages) CH_PAGE = 1;
+  const list = all.slice((CH_PAGE - 1) * CH_PER, CH_PAGE * CH_PER);
+  const nums = pages > 1 ? '<div class="chpg">' +
+    Array.from({length: pages}, (_, i) =>
+      '<button type="button" data-chp="' + (i + 1) + '"' +
+      (CH_PAGE === i + 1 ? ' class="on"' : '') + '>' + (i + 1) + '</button>'
+    ).join("") + '</div>' : "";
   const cells = list.map(c => {
     /* اسم اللغة كما يعرفه المستخدم في بقية التطبيق حين تطابقت */
     const lang = c[3] && L[c[3]] ? L[c[3]][ui] : (ui === "ar" ? c[1] : c[1]);
@@ -3781,7 +3839,7 @@ function channelsHTML(){
       '<span>' + esc(c[0].replace("https://t.me/", "@")) + '</span></span></a>';
   }).join("");
   return '<section class="res-sec"><h3>' + t.chT + '</h3>' +
-    '<p class="ch-lead">' + t.chLead + '</p>' +
+    '<p class="ch-lead">' + t.chLead + '</p>' + nums +
     '<div class="chgrid">' + cells + '</div></section>';
 }
 
